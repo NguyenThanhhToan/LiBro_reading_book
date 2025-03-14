@@ -9,11 +9,11 @@ class FeaturedScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Center(
         child: Text(
-          'nổi bật', 
+          'nổi bật \n nổi bật', 
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       ),

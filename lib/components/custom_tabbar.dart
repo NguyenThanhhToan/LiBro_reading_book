@@ -10,12 +10,12 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
     return TabBar(
       indicatorColor: Color(0xFFA37200),
       labelColor: Color(0xFFA37200),
-      unselectedLabelColor: Color.fromARGB(255, 0, 0, 0),
+      unselectedLabelColor: Colors.black,
       labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
       tabs: tabs.map((tab) => Tab(text: tab)).toList(),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(100.0);
+  Size get preferredSize => const Size.fromHeight(60.0);
 }

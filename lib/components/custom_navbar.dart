@@ -12,30 +12,30 @@ class CustomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      backgroundColor: Colors.grey,
-      selectedItemColor: Colors.blueAccent,
-      unselectedItemColor: Colors.grey,
+      backgroundColor: Colors.black,
+      selectedItemColor: Color(0xFFA37200),
+      unselectedItemColor: Colors.black,
       showUnselectedLabels: true,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Trang chủ',
+          icon: ImageIcon(AssetImage('assets/icons/home_icon_black.png')),
+          label: 'Trang chủ,'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.explore),
-          label: 'Khám phá',
+          icon: ImageIcon(AssetImage('assets/icons/book_icon_black.png')),
+          label: 'Kệ sách',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.star),
-          label: 'Nổi bật',
+          icon: ImageIcon(AssetImage('assets/icons/search_icon_black.png')),
+          label: 'Tìm kiếm',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.new_releases),
-          label: 'Mới nhất',
+          icon: ImageIcon(AssetImage('assets/icons/notic_icon_black.png')),
+          label: 'Thông báo',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.category),
-          label: 'Danh mục',
+          icon: ImageIcon(AssetImage('assets/icons/user_icon_black.png')),
+          label: 'Tài khoản',
         ),
       ],
     );
