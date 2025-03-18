@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/home_item.dart';
 import '../../models/book_model.dart';
+import '../../widgets/book_item.dart';
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
 
@@ -15,9 +16,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           SizedBox( height: 30),
           //banner
           SizedBox(
@@ -97,9 +99,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
               style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
             ),
           ), 
+          Container(
+            height: 380,
+            child: GridView.builder(
+              scrollDirection: Axis.horizontal,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: books.length,
+              itemBuilder: (context, index) {
+                return BookItem(books[index]);
+              },
+            ),
+          ),
        ],
       ),
-    );
+    ),
+   );
   } 
   @override
   void dispose() { 
