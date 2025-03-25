@@ -9,7 +9,7 @@ class Bookshelf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 7,
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -18,15 +18,17 @@ class Bookshelf extends StatelessWidget {
           child: const Column(
             children: [
               SizedBox(height: 22),
-              CustomTabBar(tabs: ['Khám phá', 'Nổi bật', 'Mới nhất', 'Danh mục', 'adfas']),
+              CustomTabBar(tabs: ['BST cá nhân', 'BST yêu thích', 'Sách', 'BST yêu thích', 'BST yêu thích', 'BST yêu thích', 'BST yêu thích',]),
               Expanded(
                 child: TabBarView(
                   children: [
                     Center(child: Text("Nội dung Khám phá")),
                     Center(child: Text("Nội dung Nổi bật")),
                     Center(child: Text("Nội dung Mới nhất")),
-                    Center(child: Text("Nội dung Danh mục")),
-                    Center(child: Text("Nội dung Danh mục")),
+                    Center(child: Text("Nội dung Mới nhất")),
+                    Center(child: Text("Nội dung Mới nhất")),
+                    Center(child: Text("Nội dung Mới nhất")),
+                    Center(child: Text("Nội dung Mới nhất")),
                   ],
                 ),
               ),

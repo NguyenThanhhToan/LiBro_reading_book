@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-
+import 'api_constants.dart';
 class AuthService {
-  final Dio _dio = Dio(BaseOptions(baseUrl: "http://10.0.2.2:8080/api/v1/auth"));
+  final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}/auth"));
 
   Future<int?> register({
     required String username,
