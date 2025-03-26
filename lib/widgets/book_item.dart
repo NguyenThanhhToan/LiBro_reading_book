@@ -4,8 +4,8 @@ import 'dart:math';
 
 class BookItem extends StatelessWidget {
   final Book book;
-
   const BookItem(this.book, {Key? key}) : super(key: key);
+
   Color getRandomColor() {
     List<Color> colors = [
       Colors.red, Colors.blue, Colors.green, Colors.grey, 
@@ -13,9 +13,16 @@ class BookItem extends StatelessWidget {
     ];
     return colors[Random().nextInt(colors.length)];
   }
+  String getRandomCategory(List<String> categories) {
+    if (categories.isNotEmpty) {
+      return categories[Random().nextInt(categories.length)];
+    }
+    return "Chưa có thể loại"; // Trường hợp danh sách rỗng
+  }
 
   @override
   Widget build(BuildContext context) {
+    String randomCategory = getRandomCategory(book.categories);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       width: 120,
@@ -30,8 +37,7 @@ class BookItem extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  book.image,
+                child: Image.asset('assets/images/Doraemon1.jpg',
                   width: 115,
                   height: 140,
                   fit: BoxFit.cover,
@@ -47,7 +53,7 @@ class BookItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    book.category,
+                    randomCategory, 
                     style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w900),
                   ),
                 ),
@@ -57,7 +63,7 @@ class BookItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
             child: Text(
-              book.name,
+              book.title,
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -67,7 +73,7 @@ class BookItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
             child: Text(
-              'Tác giả: '+ book.author,
+              'Tác giả: '+ book.authorName,
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

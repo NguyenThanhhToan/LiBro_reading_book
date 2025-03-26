@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/home_item.dart';
-import '../../models/book_model.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/book_viewmodel.dart';
 import '../../widgets/book_item.dart';
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -10,10 +11,23 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  void _fetchData() {
+    Future.microtask(() {
+      Provider.of<BookViewModel>(context, listen: false).fetchBooks();
+    });
+  }
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
+    var bookViewModel = Provider.of<BookViewModel>(context);
+    
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
@@ -85,9 +99,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 childAspectRatio: 0.55,
                 crossAxisSpacing: 10,
               ),
-              itemCount: books.length,
+              itemCount: bookViewModel.books.length,
               itemBuilder: (context, index) {
-                return CurrentBook(books[index]);
+                return CurrentBook(bookViewModel.books[index]);
               },
             ),
           ),
@@ -108,9 +122,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 childAspectRatio: 1.5,
                 crossAxisSpacing: 10,
               ),
-              itemCount: books.length,
+              itemCount: bookViewModel.books.length,
               itemBuilder: (context, index) {
-                return BookItem(books[index]);
+                return BookItem(bookViewModel.books[index]);
               },
             ),
           ),

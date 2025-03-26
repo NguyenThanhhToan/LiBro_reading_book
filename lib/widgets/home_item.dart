@@ -55,7 +55,7 @@ class CurrentBook extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               image: DecorationImage(
-                image: AssetImage(book.image),
+                image: AssetImage("assets/images/Doraemon1.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -63,7 +63,7 @@ class CurrentBook extends StatelessWidget {
           const SizedBox(width: 10),
           Flexible(
             child: Text(
-              book.name,
+              book.title,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
