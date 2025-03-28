@@ -191,7 +191,7 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       var result = await _authService.login(email: email, password: password);
-      if (result != null) {
+      if (result) { // ✅ Đúng logic: Nếu đăng nhập thành công (true), mới chuyển trang
         _isLoading = false;
         notifyListeners();
 
