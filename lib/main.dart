@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
 import 'package:Libro/viewmodels/auth_viewmodel.dart';
+import 'package:Libro/viewmodels/category_viewmodel.dart';
 import 'package:Libro/views/auth/login_screen.dart';
 
 void main() {
@@ -12,6 +13,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => OtpViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => BookViewModel()),
+        ChangeNotifierProvider(create: (_) => CategoryViewModel()),
       ],
       child: const MyApp(),
     ),
