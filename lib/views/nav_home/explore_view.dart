@@ -19,7 +19,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void _fetchData() {
     Future.microtask(() {
-      Provider.of<BookViewModel>(context, listen: false).fetchBooks();
+      Provider.of<BookViewModel>(context, listen: false).SuggestedBooks();
     });
   }
   final PageController _pageController = PageController();
@@ -99,9 +99,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 childAspectRatio: 0.55,
                 crossAxisSpacing: 10,
               ),
-              itemCount: bookViewModel.books.length,
+              itemCount: bookViewModel.suggestBooks.length,
               itemBuilder: (context, index) {
-                return CurrentBook(bookViewModel.books[index]);
+                return CurrentBook(bookViewModel.suggestBooks[index]);
               },
             ),
           ),
@@ -122,9 +122,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 childAspectRatio: 1.5,
                 crossAxisSpacing: 10,
               ),
-              itemCount: bookViewModel.books.length,
+              itemCount: bookViewModel.suggestBooks.length,
               itemBuilder: (context, index) {
-                return BookItem(bookViewModel.books[index]);
+                return BookItem(bookViewModel.suggestBooks[index]);
               },
             ),
           ),
