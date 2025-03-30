@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import '../../viewmodels/book_viewmodel.dart';
 import '../../widgets/book_item.dart';
 
-class FeaturedScreen extends StatefulWidget {
+class LatestScreen extends StatefulWidget {
   @override
-  _FeaturedBooksScreenState createState() => _FeaturedBooksScreenState();
+  _LatestScreenState createState() => _LatestScreenState();
 }
 
-class _FeaturedBooksScreenState extends State<FeaturedScreen> {
+class _LatestScreenState extends State<LatestScreen> {
   @override
   void initState() {
     super.initState();

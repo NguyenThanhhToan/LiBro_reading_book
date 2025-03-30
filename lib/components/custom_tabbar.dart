@@ -7,12 +7,16 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TabBar(
-      indicatorColor: Color(0xFFA37200),
-      labelColor: Color(0xFFA37200),
-      unselectedLabelColor: Colors.black,
-      labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-      tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+    return Container(
+      child: TabBar(
+        tabAlignment: TabAlignment.center,
+        isScrollable: true,
+        indicatorColor: const Color(0xFFA37200) ,// Ẩn đường kẻ ngăn cách
+        labelColor: const Color(0xFFA37200),
+        unselectedLabelColor: Colors.black,
+        labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+      ),
     );
   }
 

@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'api_constants.dart';
 class AuthService {
-  final Dio _dio = Dio(BaseOptions(baseUrl: "http://10.0.2.2:8080/api/v1/auth"));
+  final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}/auth"));
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   Future<int?> register({
     required String username,
@@ -74,7 +76,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>?> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) async {
     try {
       final response = await _dio.post(
         "/login",
@@ -82,22 +84,40 @@ class AuthService {
         options: Options(headers: {"Content-Type": "application/json"}),
       );
 
-      print("📩 Phản hồi đăng nhập: ${response.data}"); // 🛠 Debug phản hồi API
+      print("📩 Phản hồi đăng nhập: ${response.data}"); // 🛠 Debug API
 
       if (response.statusCode == 200 && response.data["status"] == 200) {
-        return {
-          "userId": response.data["data"]["id"],
-          "token": response.data["data"]["token"],
-          "userName": response.data["data"]["userName"],
-        };
+        String token = response.data["data"]["token"];
+        await _saveToken(token);
+        return true; // Đăng nhập thành công
       } else {
-        return null;
+        return false; // Đăng nhập thất bại
       }
     } catch (e) {
       print("🔥 Lỗi đăng nhập: $e");
-      return null;
+      return false;
     }
   }
 
+  // ✅ Lưu token vào Secure Storage
+  Future<bool> _saveToken(String token) async {
+    try {
+      await _storage.write(key: 'token', value: token);
+      return true;
+    } catch (e) {
+      print("⚠️ Lỗi lưu token: $e");
+      return false;
+    }
+  }
+
+  // ✅ Lấy token từ Secure Storage
+  Future<String?> getToken() async {
+    try {
+      return await _storage.read(key: 'token');
+    } catch (e) {
+      print("⚠️ Lỗi lấy token: $e");
+      return null;
+    }
+  }
 
 }
