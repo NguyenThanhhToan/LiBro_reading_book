@@ -37,7 +37,7 @@ class BookItem extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset('assets/images/Doraemon1.jpg',
+                child: Image.network(book.imagePath,
                   width: 115,
                   height: 140,
                   fit: BoxFit.cover,

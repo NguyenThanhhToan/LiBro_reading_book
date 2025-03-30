@@ -6,11 +6,13 @@ class BookViewModel extends ChangeNotifier {
   final BookService _bookService = BookService();
   List<Book> _suggestedBooks = [];
   List<Book> _lastedBooks = [];
+  List<Book> _featuredBooks =[];
   bool _isLoading = false;
   String? _errorMessage;
 
   List<Book> get suggestBooks => _suggestedBooks;
   List<Book> get lastedBooks => _lastedBooks;
+  List<Book> get featuredBooks => _featuredBooks;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -40,6 +42,22 @@ class BookViewModel extends ChangeNotifier {
     } catch (e) {
       _errorMessage = "Lỗi tải danh sách sách: $e";
       _lastedBooks = [];
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> FeaturedBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _featuredBooks = await _bookService.fetchFeaturedBooks();
+    } catch (e) {
+      _errorMessage = "Lỗi tải danh sách sách: $e";
+      _featuredBooks = [];
     }
 
     _isLoading = false;

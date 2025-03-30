@@ -13,7 +13,7 @@ class _FeaturedBooksScreenState extends State<FeaturedScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookViewModel>(context, listen: false).LastedBooks();
+      Provider.of<BookViewModel>(context, listen: false).FeaturedBooks();
     });
   }
 
@@ -41,7 +41,7 @@ class _FeaturedBooksScreenState extends State<FeaturedScreen> {
                 child: Wrap(
                   spacing: -4.5,
                   runSpacing: 10,
-                  children: bookViewModel.lastedBooks
+                  children: bookViewModel.featuredBooks
                       .map((book) => BookItem(book)) // ✅ Hiển thị danh sách từ API
                       .toList(),
                 ),

@@ -19,10 +19,7 @@
           "Content-Type": "application/json",
         }),
       );
-
-      // 📡 Debug: In ra dữ liệu nhận được từ API
-      print("📡 API Response: ${response.data}");
-
+      
       if (response.statusCode == 200) {
         if (response.data["status"] == 200) {
           return Book.fromJsonList(response.data["data"]);
@@ -51,8 +48,33 @@
         }),
       );
 
-      // 📡 Debug: In ra dữ liệu nhận được từ API
-      print("📡 API Response: ${response.data}");
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API: $e");
+      return [];
+    }
+  }
+
+  Future<List<Book>> fetchFeaturedBooks() async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "${ApiConstants.baseUrl}/book/top-interact",
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
 
       if (response.statusCode == 200) {
         if (response.data["status"] == 200) {
