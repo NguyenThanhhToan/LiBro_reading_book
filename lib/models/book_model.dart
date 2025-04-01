@@ -1,9 +1,11 @@
 import 'dart:math';
+import '../services/api_constants.dart';
 class Book {
   final int bookId;
   final String title;
   final List<String> categories;
   final String authorName;
+  final String imagePath;
   final String createdAt;
   final String? pdfFilePath;
   final int? totalViews;
@@ -14,6 +16,7 @@ class Book {
     required this.title,
     required this.categories,
     required this.authorName,
+    required this.imagePath,
     required this.createdAt,
     this.pdfFilePath,
     this.totalViews,
@@ -26,6 +29,8 @@ class Book {
     title: json['title'] ?? "Không có tiêu đề",
     categories: (json['categories'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     authorName: json['authorName'] ?? "Không rõ tác giả",
+    imagePath: json['imagePath'] != null && json['imagePath'].startsWith("http")
+          ? json['imagePath']: "${ApiConstants.host}${json['imagePath'] ?? ''}",
     createdAt: json['createdAt'] ?? "",
     pdfFilePath: json['pdfFilePath'],
     totalViews: json['totalViews'] ?? 0,
@@ -39,6 +44,7 @@ class Book {
       'title': title,
       'categories': categories,
       'authorName': authorName,
+      'imagePath': imagePath,
       'createdAt': createdAt,
       'pdfFilePath': pdfFilePath,
       'totalViews': totalViews,

@@ -3,17 +3,17 @@ import 'package:provider/provider.dart';
 import '../../viewmodels/book_viewmodel.dart';
 import '../../widgets/book_item.dart';
 
-class FeaturedScreen extends StatefulWidget {
+class LatestScreen extends StatefulWidget {
   @override
-  _FeaturedBooksScreenState createState() => _FeaturedBooksScreenState();
+  _LatestScreenState createState() => _LatestScreenState();
 }
 
-class _FeaturedBooksScreenState extends State<FeaturedScreen> {
+class _LatestScreenState extends State<LatestScreen> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookViewModel>(context, listen: false).FeaturedBooks();
+      Provider.of<BookViewModel>(context, listen: false).LastedBooks();
     });
   }
 
@@ -41,7 +41,7 @@ class _FeaturedBooksScreenState extends State<FeaturedScreen> {
                 child: Wrap(
                   spacing: -4.5,
                   runSpacing: 10,
-                  children: bookViewModel.featuredBooks
+                  children: bookViewModel.lastedBooks
                       .map((book) => BookItem(book)) // ✅ Hiển thị danh sách từ API
                       .toList(),
                 ),

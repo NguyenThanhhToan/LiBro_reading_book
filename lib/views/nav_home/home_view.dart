@@ -3,8 +3,8 @@ import '../../utils/app_colors.dart';
 import '../../components/custom_tabbar.dart';
 import '../../components/custom_navbar.dart';
 import 'explore_view.dart';
-import 'lasted_view.dart';
 import 'featured_view.dart';
+import 'latest_view.dart';
 import 'categories_view.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
                     children: [
                       ExploreScreen(),
                       FeaturedScreen(),
-                      LatestScreen(), // ✅ Giờ có thể truy cập Provider<BookViewModel>
+                      LatestScreen(),
                       CategoriesScreen(),
                     ],
                   ),
