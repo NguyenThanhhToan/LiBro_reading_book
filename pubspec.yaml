@@ -16,6 +16,9 @@ dependencies:
   provider: ^6.1.2
   font_awesome_flutter: ^10.5.0
   flutter_secure_storage: ^9.2.4
+  flutter_pdfview: 1.4.0
+  http: ^1.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -19,4 +19,5 @@ class AppColors {
 
   static const Color secondaryColor = Color(0xFFD9D9D9);
   static const Color textColor = Color(0xFF333333);
+  static const Color searchColor = Color(0xD9D9D9);
 }
