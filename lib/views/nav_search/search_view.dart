@@ -8,31 +8,47 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: AppColors.backgroundColor,
-          ),
-          child: const Column(
-            children: [
-              SizedBox(height: 22),
-              CustomTabBar(tabs: ['Khám phá', 'Nổi bật', 'Mới nhất', 'Danh mục']),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    Center(child: Text("Nội dung Khám phá")),
-                    Center(child: Text("Nội dung Nổi bật")),
-                    Center(child: Text("Nội dung Mới nhất")),
-                    Center(child: Text("Nội dung Danh mục")),
-                  ],
+  return DefaultTabController(
+    length: 4,
+    child: Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.backgroundColor,
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Tìm kiếm sách, tác giả...",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  prefixIcon: Icon(Icons.search),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 223, 223, 223),
                 ),
               ),
-            ],
-          ),
+            ),
+            const CustomTabBar(tabs: ['Sách', 'Tác giả', 'Danh mục', 'Danh ngôn']),
+            const Expanded(
+              child: TabBarView(
+                children: [
+                  Center(child: Text("Nội dung Khám phá")),
+                  Center(child: Text("Nội dung Nổi bật")),
+                  Center(child: Text("Nội dung Mới nhất")),
+                  Center(child: Text("Nội dung Danh mục")),
+                ],
+              ),
+            ),
+          ],
         ),
-        bottomNavigationBar: CustomNavBar(currentIndex: 2)),
-    );
-  }
+      ),
+      bottomNavigationBar: CustomNavBar(currentIndex: 2),
+    ),
+  );
+}
+
 }
