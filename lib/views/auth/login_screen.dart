@@ -5,9 +5,15 @@ import 'package:Libro/views/auth/register_screen.dart';
 import 'package:Libro/viewmodels/auth_viewmodel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _obscurePassword = true; // 🔒 Ẩn mật khẩu mặc định
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +29,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Đăng nhập",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textColor,
-                  ),
-                ),
+                Text("Đăng nhập", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textColor)),
                 SizedBox(height: 24),
                 _buildTextField(emailController, "Nhập email của bạn ...", false),
                 SizedBox(height: 12),
@@ -61,11 +60,11 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  /// Widget tạo ô nhập liệu
+  /// Widget tạo ô nhập liệu (hỗ trợ hiện/ẩn mật khẩu)
   Widget _buildTextField(TextEditingController controller, String hintText, bool isPassword) {
     return TextField(
       controller: controller,
-      obscureText: isPassword,
+      obscureText: isPassword ? _obscurePassword : false,
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,
@@ -74,11 +73,20 @@ class LoginScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
+        suffixIcon: isPassword
+            ? IconButton(
+          icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+        )
+            : null,
       ),
     );
   }
 
-  /// Nút đăng nhập
   Widget _buildLoginButton(BuildContext context, LoginViewModel loginViewModel) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -105,7 +113,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  /// Nút đăng nhập bằng Google
   Widget _buildGoogleLoginButton() {
     return GestureDetector(
       onTap: () {
@@ -127,7 +134,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  /// Dòng chữ "Chưa có tài khoản?"
   Widget _buildRegisterLink(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -146,3 +152,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
