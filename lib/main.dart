@@ -1,3 +1,4 @@
+import 'package:Libro/viewmodels/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
@@ -14,6 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => BookViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (context) => UserViewmodel()),
       ],
       child: const MyApp(),
     ),
