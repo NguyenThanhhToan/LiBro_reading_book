@@ -5,7 +5,7 @@ import '../services/auth_service.dart';
 import 'package:Libro/views/auth/otp_screen.dart';
 import 'package:Libro/views/auth/login_screen.dart';
 import 'package:Libro/views/nav_home/home_view.dart';
-class RegisterViewModel extends ChangeNotifier {
+class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
 
   final TextEditingController usernameController = TextEditingController();
@@ -31,6 +31,33 @@ class RegisterViewModel extends ChangeNotifier {
       errors[key] = message;
     }
     notifyListeners();
+  }
+  Future<void> logout(BuildContext context) async {
+    setLoading(true);
+    try {
+      bool result = await _authService.logout();
+      if (result) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("✅ Đăng xuất thành công")),
+        );
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+              (route) => false,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("❌ Đăng xuất thất bại")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("⚠️ Lỗi: ${e.toString()}")),
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   bool _validateInputs() {
@@ -92,13 +119,12 @@ class RegisterViewModel extends ChangeNotifier {
 
 class OtpViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
-
   final TextEditingController otpController = TextEditingController();
 
   bool isLoading = false;
   String errorMessage = '';
 
-  int countdown = 60; // Thời gian đếm ngược OTP (60 giây)
+  int countdown = 60;
   Timer? _timer;
 
   OtpViewModel() {
@@ -119,8 +145,7 @@ class OtpViewModel extends ChangeNotifier {
   }
 
   void resendOtp() {
-    startCountdown(); // Bắt đầu lại bộ đếm thời gian
-    // Thực hiện gửi lại OTP (Gọi API hoặc xử lý logic ở đây)
+    startCountdown();
     print("OTP đã được gửi lại!");
   }
 
@@ -152,10 +177,8 @@ class OtpViewModel extends ChangeNotifier {
           SnackBar(content: Text("✅ Xác thực OTP thành công! Vui lòng đăng nhập.")),
         );
 
-        // Chờ 1 giây để người dùng thấy thông báo trước khi chuyển màn hình
         await Future.delayed(Duration(seconds: 1));
 
-        // Điều hướng đến màn hình đăng nhập bằng MaterialPageRoute
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -191,27 +214,26 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       var result = await _authService.login(email: email, password: password);
-      if (result) { // ✅ Đúng logic: Nếu đăng nhập thành công (true), mới chuyển trang
+      if (result) {
         _isLoading = false;
         notifyListeners();
 
-        // ✅ Điều hướng sau khi đăng nhập thành công
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeView()),
         );
-        return true; // ✅ Trả về true nếu đăng nhập thành công
+        return true;
       } else {
         _isLoading = false;
         _errorMessage = "Đăng nhập thất bại. Vui lòng kiểm tra lại!";
         notifyListeners();
-        return false; // ❌ Trả về false nếu thất bại
+        return false; //
       }
     } catch (e) {
       _isLoading = false;
       _errorMessage = "Lỗi: ${e.toString()}";
       notifyListeners();
-      return false; // ❌ Trả về false nếu có lỗi
+      return false;
     }
   }
 

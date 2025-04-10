@@ -3,6 +3,9 @@ import '../../utils/app_colors.dart';
 import '../../components/custom_navbar.dart';
 import 'change_info_view.dart';
 import 'change_password_view.dart';
+import '../../viewmodels/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
+
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -26,10 +29,12 @@ class ProfileView extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-              child: const Text('Đăng xuất'),
+              onPressed: () {
+                context.read<AuthViewModel>().logout(context);
+              },
+              child: const Text("Đăng xuất"),
             ),
+
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -87,26 +92,6 @@ class ProfileView extends StatelessWidget {
           );
         }
       },
-    );
-  }
-}
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Profile View',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ProfileView(),
     );
   }
 }

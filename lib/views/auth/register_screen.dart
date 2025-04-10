@@ -12,7 +12,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
-    final registerVM = Provider.of<RegisterViewModel>(context);
+    final registerVM = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
       body: Container(
@@ -142,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildDateField(RegisterViewModel registerVM) {
+  Widget _buildDateField(AuthViewModel registerVM) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -99,10 +99,37 @@ class AuthService {
     }
   }
 
+  Future<bool> logout() async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.post(
+        "/logout",
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      print("📩 Phản hồi đăng xuất: ${response.data}");
+
+      if (response.statusCode == 200 && response.data["status"] == 200) {
+        await _storage.delete(key: 'token'); // Xóa token sau khi logout
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("🔥 Lỗi đăng xuất: $e");
+      return false;
+    }
+  }
+
   // ✅ Lưu token vào Secure Storage
   Future<bool> _saveToken(String token) async {
     try {
-      await _storage.write(key: 'token', value: token);
+      _storage.write(key: 'token', value: token);
       return true;
     } catch (e) {
       print("⚠️ Lỗi lưu token: $e");
@@ -113,7 +140,7 @@ class AuthService {
   // ✅ Lấy token từ Secure Storage
   Future<String?> getToken() async {
     try {
-      return await _storage.read(key: 'token');
+      return _storage.read(key: 'token');
     } catch (e) {
       print("⚠️ Lỗi lấy token: $e");
       return null;
