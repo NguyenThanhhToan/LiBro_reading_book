@@ -1,5 +1,6 @@
 import 'package:Libro/models/user_update_model.dart';
 import 'package:flutter/material.dart';
+import '../models/user_changepassword_model.dart';
 import '../models/user_model.dart';
 import '../services/user_service.dart';
 
@@ -11,10 +12,10 @@ class UserViewmodel extends ChangeNotifier {
   String phoneNumber = "";
   String dob = "";
 
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   // hàm lấy user info
   Future<void> fetchUserInfo() async {
@@ -26,10 +27,10 @@ class UserViewmodel extends ChangeNotifier {
       dob = user.dob;
 
       // Cập nhật giá trị của TextEditingController
-      userNameController.text = userName;
+      oldPasswordController.text = userName;
       emailController.text = email;
-      phoneController.text = phoneNumber;
-      dobController.text = dob;
+      newPasswordController.text = phoneNumber;
+      confirmPasswordController.text = dob;
 
       notifyListeners();
     } catch (e) {
@@ -41,9 +42,9 @@ class UserViewmodel extends ChangeNotifier {
   Future<void> updateUserInfo() async {
     try {
       UserUpdateModel updatedUser = UserUpdateModel(
-        userName: userNameController.text.isNotEmpty ? userNameController.text : userName,
-        phoneNumber: phoneController.text.isNotEmpty ? phoneController.text : phoneNumber,
-        dob: dobController.text.isNotEmpty ? dobController.text : dob, // giữ giá trị cũ nếu không nhập mới
+        userName: oldPasswordController.text.isNotEmpty ? oldPasswordController.text : userName,
+        phoneNumber: newPasswordController.text.isNotEmpty ? newPasswordController.text : phoneNumber,
+        dob: confirmPasswordController.text.isNotEmpty ? confirmPasswordController.text : dob, // giữ giá trị cũ nếu không nhập mới
       );
 
       await _service.updateUserInfo(updatedUser);
@@ -58,4 +59,38 @@ class UserViewmodel extends ChangeNotifier {
       print("Lỗi cập nhật thông tin: $e");
     }
   }
+
+  // Hàm đổi mật khẩu nhận các giá trị từ UI và BuildContext để xử lý giao diện
+  Future<void> changePasswordWithValues(
+      String oldPass,
+      String newPass,
+      String confirmPass,
+      BuildContext context,
+      ) async {
+    try {
+      final model = UserChangepasswordModel(
+        oldPassword: oldPass,
+        newPassword: newPass,
+        confirmPassword: confirmPass,
+      );
+
+      final response = await _service.changePassword(model);
+
+      if (response.status == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.message)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Lỗi: ${response.message}")),
+        );
+      }
+    } catch (e) {
+      // Handle any exceptions
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Lỗi: $e")),
+      );
+    }
+  }
+
 }

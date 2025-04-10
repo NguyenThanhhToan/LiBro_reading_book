@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../utils/app_colors.dart';
 import '../../components/custom_navbar.dart';
 import 'change_info_view.dart';
-
+import 'change_password_view.dart';
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -35,7 +35,7 @@ class ProfileView extends StatelessWidget {
               child: ListView(
                 children: [
                   _buildMenuItem(context, Icons.person, 'Thông tin của bạn', const ChangeInfoView()),
-                  _buildMenuItem(context, Icons.lock, 'Đổi mật khẩu', null),
+                  _buildMenuItem(context, Icons.lock, 'Đổi mật khẩu', const ChangePasswordView()),
                   _buildMenuItem(context, Icons.settings, 'Tuỳ chỉnh danh mục & thao tác', null),
                   _buildMenuItem(context, Icons.backup, 'Sao lưu & khôi phục', null),
                   _buildMenuItem(context, Icons.wallpaper, 'Hình nền', null),

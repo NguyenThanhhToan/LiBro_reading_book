@@ -47,10 +47,10 @@ class ChangeInfoView extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-                    _buildTextField("Tên người dùng", viewModel.userNameController),
+                    _buildTextField("Tên người dùng", viewModel.oldPasswordController),
                     _buildTextField("Email", viewModel.emailController),
-                    _buildTextField("Số điện thoại", viewModel.phoneController),
-                    _buildTextField("Ngày sinh", viewModel.dobController),
+                    _buildTextField("Số điện thoại", viewModel.newPasswordController),
+                    _buildTextField("Ngày sinh", viewModel.confirmPasswordController),
 
                     const SizedBox(height: 20),
                     Center(
