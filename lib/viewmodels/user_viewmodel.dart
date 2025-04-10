@@ -17,6 +17,12 @@ class UserViewmodel extends ChangeNotifier {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   // hàm lấy user info
   Future<void> fetchUserInfo() async {
     try {
@@ -60,13 +66,26 @@ class UserViewmodel extends ChangeNotifier {
     }
   }
 
-  // Hàm đổi mật khẩu nhận các giá trị từ UI và BuildContext để xử lý giao diện
-  Future<void> changePasswordWithValues(
+  Future<void> changePassword(
       String oldPass,
       String newPass,
       String confirmPass,
       BuildContext context,
       ) async {
+    // ✅ Kiểm tra dữ liệu đầu vào
+    if (oldPass.isEmpty) {
+      _showSnackBar(context, 'Vui lòng nhập mật khẩu cũ');
+      return;
+    }
+    if (newPass.length < 6) {
+      _showSnackBar(context, 'Mật khẩu mới phải có ít nhất 6 ký tự');
+      return;
+    }
+    if (newPass != confirmPass) {
+      _showSnackBar(context, 'Mật khẩu xác nhận không khớp');
+      return;
+    }
+
     try {
       final model = UserChangepasswordModel(
         oldPassword: oldPass,
@@ -77,20 +96,16 @@ class UserViewmodel extends ChangeNotifier {
       final response = await _service.changePassword(model);
 
       if (response.status == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message)),
-        );
+        _showSnackBar(context, response.message);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Lỗi: ${response.message}")),
-        );
+        _showSnackBar(context, "Lỗi: ${response.message}");
       }
     } catch (e) {
-      // Handle any exceptions
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Lỗi: $e")),
-      );
+      _showSnackBar(context, "Lỗi: $e");
     }
   }
+
+
+
 
 }
