@@ -4,9 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/HttpResponse.dart';
 import '../models/user_model.dart';
-import '../models/user_update_model.dart';
 import '../services/api_constants.dart';
-
 
 class UserService {
   final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));

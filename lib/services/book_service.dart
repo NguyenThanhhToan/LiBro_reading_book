@@ -90,4 +90,94 @@
       return [];
     }
   }
+  Future<List<Book>> fetchBooksByCategories(List<String> categoryNames) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "/book/search/category",
+        queryParameters: {
+          'categoryNames': categoryNames, // truyền list như query repeat
+        },
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API theo danh mục: $e");
+      return [];
+    }
+  }
+  Future<List<Book>> fetchBooksByAuthor(List<String> authorNames) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "/book/search/author",
+        queryParameters: {
+          'authorNames': authorNames,
+        },
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API theo tác giả: $e");
+      return [];
+    }
+  }
+  Future<List<Book>> fetchBookByTittle(List<String> title) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "/book/search/title",
+        queryParameters: {
+          'title': title,
+        },
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API theo tên sách: $e");
+      return [];
+    }
+  }
 }
