@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import '../../viewmodels/read_pdf_viewmodel.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,51 +14,38 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String pdfUrl = "http://www.pdf995.com/samples/pdf.pdf";
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: pdfUrl.isEmpty
-          ? Center(child: CircularProgressIndicator()) // Show loading until file is ready
-          : PDFScreen(path: pdfUrl), // Show PDFScreen when file is ready
-    );
-  }
-}
-
-class PDFScreen extends StatefulWidget {
-  final String? path;
-  PDFScreen({Key? key, this.path}) : super(key: key);
-  _PDFScreenState createState() => _PDFScreenState();
-}
-
-class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   String remotePDFpath = "";
+
   @override
   void initState() {
     super.initState();
-    _downloadAndSetPDF();
+    createFileOfPdfUrl().then((f) {
+      setState(() {
+        remotePDFpath = f.absolute.path;
+      });
+    });
   }
 
-  Future<void> _downloadAndSetPDF() async {
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
     try {
-      if (widget.path == null || widget.path!.isEmpty) {
-        throw Exception('PDF URL is null or empty');
-      }
-          
-      File file = await createFileOfPdfUrl(widget.path!); // Thêm ! để cast thành non-null
-      setState(() {
-        remotePDFpath = file.absolute.path;
-      });
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
     } catch (e) {
-        print("Error downloading PDF: $e");
-        setState(() {
-          errorMessage = 'Failed to load PDF: ${e.toString()}';
-        });
-      }
+      throw Exception('Error parsing asset file!');
     }
-  @override
+    return completer.future;
+  }
+
+    @override
   void dispose() {
     super.dispose();
     if (remotePDFpath.isNotEmpty) {
@@ -65,6 +53,48 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter PDF View',
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: Center(child: Builder(
+          builder: (BuildContext context) {
+            return Column(
+              children: <Widget>[
+                TextButton(
+                  child: Text("Remote PDF"),
+                  onPressed: () {
+                    if (remotePDFpath.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PDFScreen(path: remotePDFpath),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        )),
+      ),
+    );
+  }
+}
+
+class PDFScreen extends StatefulWidget {
+  final String? path;
+
+  PDFScreen({Key? key, this.path}) : super(key: key);
+
+  _PDFScreenState createState() => _PDFScreenState();
+}
+
+class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
   int? pages = 0;
@@ -74,7 +104,17 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print("📜 Building UI. Current remotePDFpath: ${widget.path}");
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Document"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: Stack(
         children: <Widget>[
           PDFView(
@@ -88,7 +128,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             defaultPage: currentPage!,
             fitPolicy: FitPolicy.BOTH,
             preventLinkNavigation:
-                false, // chặn mở link bên ngoài
+                false, // if set to true the link is handled in flutter
             backgroundColor: Colors.black,
             onRender: (_pages) {
               setState(() {
