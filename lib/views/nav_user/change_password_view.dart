@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../utils/app_colors.dart';
 import '../../viewmodels/user_viewmodel.dart';
 
 class ChangePasswordView extends StatefulWidget {
