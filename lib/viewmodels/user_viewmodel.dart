@@ -12,10 +12,10 @@ class UserViewmodel extends ChangeNotifier {
   String phoneNumber = "";
   String dob = "";
 
-  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
 
   // hàm lấy user info
   Future<void> fetchUserInfo() async {
@@ -27,10 +27,10 @@ class UserViewmodel extends ChangeNotifier {
       dob = user.dob;
 
       // Cập nhật giá trị của TextEditingController
-      oldPasswordController.text = userName;
+      usernameController.text = userName;
       emailController.text = email;
-      newPasswordController.text = phoneNumber;
-      confirmPasswordController.text = dob;
+      phoneNumberController.text = phoneNumber;
+      dobController.text = dob;
 
       notifyListeners();
     } catch (e) {
@@ -42,9 +42,9 @@ class UserViewmodel extends ChangeNotifier {
   Future<void> updateUserInfo() async {
     try {
       UserUpdateModel updatedUser = UserUpdateModel(
-        userName: oldPasswordController.text.isNotEmpty ? oldPasswordController.text : userName,
-        phoneNumber: newPasswordController.text.isNotEmpty ? newPasswordController.text : phoneNumber,
-        dob: confirmPasswordController.text.isNotEmpty ? confirmPasswordController.text : dob, // giữ giá trị cũ nếu không nhập mới
+        userName: usernameController.text.isNotEmpty ? usernameController.text : userName,
+        phoneNumber: phoneNumberController.text.isNotEmpty ? phoneNumberController.text : phoneNumber,
+        dob: dobController.text.isNotEmpty ? dobController.text : dob, // giữ giá trị cũ nếu không nhập mới
       );
 
       await _service.updateUserInfo(updatedUser);

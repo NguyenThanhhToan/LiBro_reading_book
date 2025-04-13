@@ -47,10 +47,10 @@ class ChangeInfoView extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-                    _buildTextField("Tên người dùng", viewModel.oldPasswordController),
-                    _buildTextField("Email", viewModel.emailController),
-                    _buildTextField("Số điện thoại", viewModel.newPasswordController),
-                    _buildTextField("Ngày sinh", viewModel.confirmPasswordController),
+                    _buildTextField("Tên người dùng", viewModel.usernameController),
+                    _buildTextField("Email", viewModel.emailController, isEditable: false),
+                    _buildTextField("Số điện thoại", viewModel.phoneNumberController),
+                    _buildTextField("Ngày sinh", viewModel.dobController),
 
                     const SizedBox(height: 20),
                     Center(
@@ -76,17 +76,19 @@ class ChangeInfoView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(String label, TextEditingController controller, {bool isEditable = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
+        enabled: isEditable,  // Control if the field is editable or not
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
-          suffixIcon: const Icon(Icons.edit),
+          suffixIcon: isEditable ? const Icon(Icons.edit) : null,
         ),
       ),
     );
   }
+
 }
