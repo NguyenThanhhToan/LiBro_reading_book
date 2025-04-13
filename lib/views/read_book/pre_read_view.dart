@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/book_model.dart';
+import '../../viewmodels/read_pdf_viewmodel.dart';
+import 'pdf_screen.dart';
+import '../../services/api_constants.dart';
 
 class PreReadView extends StatefulWidget {
   final Book book;
@@ -148,9 +151,32 @@ class _PreReadViewState extends State<PreReadView> {
                   child: const Icon(Icons.favorite, color: Colors.red),
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
+                    final url = "${ApiConstants.host}${widget.book.pdfFilePath}";
+                    try {
+                      final file = await createFileOfPdfUrl(url);
+                      if (!mounted) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PDFScreen(path: file.path),
+                        ),
+                      );
+                    } catch (e) {
+                      print("PDF URL: $url");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Không thể mở sách.aaaa Vui lòng thử lại.")),
+                      );
+                    }
                   },
-                  label: const Text("Đọc sách",style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold,),),
+                  label: const Text(
+                    "Đọc sách",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFA37200),
                   ),
