@@ -1,10 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
+import '../models/register_model.dart';
 import '../services/auth_service.dart';
-import 'package:Libro/views/auth/otp_screen.dart';
-import 'package:Libro/views/auth/login_screen.dart';
-import 'package:Libro/views/nav_home/home_view.dart';
+import '../views/auth/login_screen.dart';
+import '../views/auth/otp_screen.dart';
+import '../views/nav_home/home_view.dart';
+
+
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
 
@@ -31,33 +34,6 @@ class AuthViewModel extends ChangeNotifier {
       errors[key] = message;
     }
     notifyListeners();
-  }
-  Future<void> logout(BuildContext context) async {
-    setLoading(true);
-    try {
-      bool result = await _authService.logout();
-      if (result) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("✅ Đăng xuất thành công")),
-        );
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => LoginScreen()),
-              (route) => false,
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("❌ Đăng xuất thất bại")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("⚠️ Lỗi: ${e.toString()}")),
-      );
-    } finally {
-      setLoading(false);
-    }
   }
 
   bool _validateInputs() {
@@ -89,7 +65,7 @@ class AuthViewModel extends ChangeNotifier {
     setLoading(true);
 
     try {
-      int? userId = await _authService.register(
+      RegisterModel registerModel = RegisterModel(
         username: usernameController.text,
         phoneNumber: phoneNumberController.text,
         email: emailController.text,
@@ -98,9 +74,11 @@ class AuthViewModel extends ChangeNotifier {
         confirmPassword: confirmPasswordController.text,
       );
 
+      int? userId = await _authService.register(registerModel);
+
       if (userId != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Đăng ký thành công! Vui lòng nhập OTP")),
+          const SnackBar(content: Text("Đăng ký thành công! Vui lòng nhập OTP")),
         );
         Navigator.pushReplacement(
           context,
@@ -111,6 +89,34 @@ class AuthViewModel extends ChangeNotifier {
       }
     } catch (e) {
       setError('general', e.toString().replaceFirst("Exception: ", ""));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    setLoading(true);
+    try {
+      bool result = await _authService.logout();
+      if (result) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("✅ Đăng xuất thành công")),
+        );
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+              (route) => false,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("❌ Đăng xuất thất bại")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("⚠️ Lỗi: ${e.toString()}")),
+      );
     } finally {
       setLoading(false);
     }
@@ -169,15 +175,14 @@ class OtpViewModel extends ChangeNotifier {
 
     try {
       bool success = await _authService.confirmOtp(userId: userId, otpCode: otpController.text);
-
       print("✅ Kết quả xác thực OTP: $success");
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("✅ Xác thực OTP thành công! Vui lòng đăng nhập.")),
+          const SnackBar(content: Text("✅ Xác thực OTP thành công! Vui lòng đăng nhập.")),
         );
 
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
 
         Navigator.pushReplacement(
           context,
@@ -195,8 +200,6 @@ class OtpViewModel extends ChangeNotifier {
       setLoading(false);
     }
   }
-
-
 }
 
 class LoginViewModel extends ChangeNotifier {
@@ -227,7 +230,7 @@ class LoginViewModel extends ChangeNotifier {
         _isLoading = false;
         _errorMessage = "Đăng nhập thất bại. Vui lòng kiểm tra lại!";
         notifyListeners();
-        return false; //
+        return false;
       }
     } catch (e) {
       _isLoading = false;
@@ -236,5 +239,4 @@ class LoginViewModel extends ChangeNotifier {
       return false;
     }
   }
-
 }

@@ -1,37 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../models/register_model.dart';
 import 'api_constants.dart';
 class AuthService {
   final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}/auth"));
   final FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  Future<int?> register({
-    required String username,
-    required String email,
-    required String password,
-    required String confirmPassword,
-    required String phoneNumber,
-    required String dob,
-  }) async {
+  Future<int?> register(RegisterModel registerModel) async {
     try {
       Response response = await _dio.post(
         "/register",
-        data: {
-          "username": username,
-          "email": email,
-          "password": password,
-          "confirmPassword": confirmPassword,
-          "phoneNumber": phoneNumber,
-          "dob": dob,
-        },
+        data: registerModel.toJson(),
       );
 
       if (response.statusCode == 200) {
         print("Phản hồi từ server: ${response.data}");
 
-        // Kiểm tra xem phản hồi có chứa "data" hay không
         if (response.data.containsKey('data')) {
-          String dataString = response.data['data']; // "Id: 9"
+          String dataString = response.data['data'];
           int? id = int.tryParse(dataString.replaceAll(RegExp(r'[^0-9]'), ''));
           return id;
         }
