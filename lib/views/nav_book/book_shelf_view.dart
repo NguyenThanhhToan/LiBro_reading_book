@@ -1,40 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../utils/app_colors.dart';
 import '../../components/custom_tabbar.dart';
 import '../../components/custom_navbar.dart';
+import '../../widgets/book_list.dart';
+import '../../viewmodels/book_viewmodel.dart';
 
 class Bookshelf extends StatelessWidget {
   const Bookshelf({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 7,
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: AppColors.backgroundColor,
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 22),
-              const CustomTabBar(tabs: [
-                'Tải xuống','Sách','BST cá nhân', 'BST yêu thích',
-              ]),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    Center(child: Text("Nội dung Nổi bật")),
-                    Center(child: Text("Nội dung Mới nhất")),
-                    Center(child: Text("Nội dung Mới nhất")),
-                    Center(child: Text("Nội dung Mới nhất")),
-                  ],
+    return ChangeNotifierProvider(
+      create: (_) => BookViewModel()..fetchAllBooks(),
+      child: DefaultTabController(
+        length: 2, // Chỉnh lại chỉ còn 2 tab như bạn đang dùng
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: AppColors.backgroundColor,
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 22),
+                const CustomTabBar(tabs: [
+                  'Sách', 'BST yêu thích',
+                ]),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      // Tab "Sách" - hiển thị dữ liệu từ API
+                      Consumer<BookViewModel>(
+                        builder: (context, viewModel, _) {
+                          if (viewModel.isLoading) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (viewModel.errorMessage != null) {
+                            return Center(child: Text(viewModel.errorMessage!));
+                          } else {
+                            return BookListWidget(books: viewModel.lastedBooks);
+                          }
+                        },
+                      ),
+                      // Tab "BST yêu thích" (hiện tại để tạm)
+                      const Center(child: Text("Nội dung yêu thích")),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          bottomNavigationBar: const CustomNavBar(currentIndex: 1),
         ),
-        bottomNavigationBar: const CustomNavBar(currentIndex: 1),
       ),
     );
   }

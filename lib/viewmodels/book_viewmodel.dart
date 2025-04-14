@@ -128,4 +128,22 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+  Future<void> fetchAllBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _lastedBooks = await _bookService.fetchAllBooks();
+      if (_lastedBooks.isEmpty) {
+        _errorMessage = "Không tìm thấy sách.";
+      }
+    } catch (e) {
+      _lastedBooks = [];
+      _errorMessage = "Lỗi khi tải sách: $e";
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
 }
