@@ -12,7 +12,9 @@ class Bookshelf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BookViewModel()..fetchAllBooks(),
+      create: (_) => BookViewModel()
+        ..fetchAllBooks()
+        ..fetchFavoriteBooks(),
       child: DefaultTabController(
         length: 2, // Chỉnh lại chỉ còn 2 tab như bạn đang dùng
         child: Scaffold(
@@ -42,7 +44,17 @@ class Bookshelf extends StatelessWidget {
                         },
                       ),
                       // Tab "BST yêu thích" (hiện tại để tạm)
-                      const Center(child: Text("Nội dung yêu thích")),
+                      Consumer<BookViewModel>(
+                        builder: (context, viewModel, _) {
+                          if (viewModel.isLoading) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (viewModel.errorMessage != null) {
+                            return Center(child: Text(viewModel.errorMessage!));
+                          } else {
+                            return BookListWidget(books: viewModel.favoriteBooks);
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
