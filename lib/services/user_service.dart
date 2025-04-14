@@ -2,7 +2,7 @@ import 'package:Libro/models/user_changepassword_model.dart';
 import 'package:Libro/models/user_update_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../models/HttpResponse.dart';
+import '../models/http_response.dart';
 import '../models/user_model.dart';
 import '../services/api_constants.dart';
 
@@ -85,6 +85,65 @@ class UserService {
       }
     } catch (e) {
       throw Exception("Lỗi cập nhật mật khẩu: $e");
+    }
+  }
+  Future<HttpResponse> forgotPassword(String email) async {
+    try {
+      final response = await _dio.post(
+        "/auth/forgot",
+        data: {
+          "email": email,
+        },
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return HttpResponse(
+          status: 200,
+          message: response.data["message"],
+          data: response.data["data"],
+        );
+      } else {
+        return HttpResponse(
+          status: response.statusCode ?? 500,
+          message: response.statusMessage ?? 'Lỗi không xác định',
+        );
+      }
+    } catch (e) {
+      throw Exception("Lỗi khi gọi API quên mật khẩu: $e");
+    }
+  }
+  Future<HttpResponse> confirmForgotPassword(String id, String otpCode) async {
+    try {
+      final response = await _dio.post(
+        "/auth/confirm-forgot/$id",  // Đảm bảo đường dẫn chứa id
+        data: {
+          "otpCode": otpCode,  // Gửi OTP làm tham số
+        },
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      print("Response: ${response.data}");
+      if (response.statusCode == 200) {
+        return HttpResponse(
+          status: 200,
+          message: response.data["message"],
+        );
+      } else {
+        return HttpResponse(
+          status: response.statusCode ?? 500,
+          message: response.statusMessage ?? 'Lỗi không xác định',
+        );
+      }
+    } catch (e) {
+      throw Exception("Lỗi khi gọi API xác nhận OTP: $e");
     }
   }
 

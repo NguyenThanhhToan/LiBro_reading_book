@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/user_changepassword_model.dart';
 import '../models/user_model.dart';
 import '../services/user_service.dart';
+import '../views/auth/login_screen.dart';
+import '../views/nav_user/otp_forgot.dart';
 
 class UserViewmodel extends ChangeNotifier {
   final UserService _service = UserService();
@@ -104,8 +106,68 @@ class UserViewmodel extends ChangeNotifier {
       _showSnackBar(context, "Lỗi: $e");
     }
   }
+  Future<void> forgotPassword(String email, BuildContext context) async {
+    if (email.isEmpty) {
+      _showSnackBar(context, 'Vui lòng nhập email');
+      return;
+    }
 
+    try {
+      final response = await _service.forgotPassword(email);
 
+      if (response.status == 200) {
+        _showSnackBar(context, response.message);
+        String id = '';
+        if (response.data != null && response.data is String) {
+          final dataString = response.data as String;
+          if (dataString.startsWith("Id: ")) {
+            id = dataString.substring(4).trim();
+          } else {
+            print("Data does not start with 'Id: '");
+          }
+        } else {
+          print("Data is null or not a string");
+        }
 
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpForgot(
+              id: id,
+              email: email,
+            ),
+          ),
+        );
+      } else {
+        _showSnackBar(context, "Lỗi: ${response.message}");
+      }
+    } catch (e) {
+      _showSnackBar(context, "Lỗi: $e");
+    }
+  }
 
+  Future<void> confirmForgotPassword(String id, String otpCode, BuildContext context) async {
+    // Kiểm tra OTP không rỗng
+    if (otpCode.isEmpty) {
+      _showSnackBar(context, 'Vui lòng nhập mã OTP');
+      return;
+    }
+
+    try {
+      // Gọi API xác nhận OTP và truyền id và otpCode làm tham số
+      final response = await _service.confirmForgotPassword(id, otpCode);
+
+      if (response.status == 200) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+        _showSnackBar(context, response.message); // Hiển thị thông báo thành công
+      } else {
+        _showSnackBar(context, "Lỗi: ${response.message}"); // Hiển thị thông báo lỗi
+      }
+    } catch (e) {
+      _showSnackBar(context, "Lỗi: $e");
+    }
+  }
 }

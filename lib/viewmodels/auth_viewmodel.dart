@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/register_model.dart';
 import '../services/auth_service.dart';
 import '../views/auth/login_screen.dart';
-import '../views/auth/otp_screen.dart';
+import '../views/auth/otp_register.dart';
 import '../views/nav_home/home_view.dart';
 
 

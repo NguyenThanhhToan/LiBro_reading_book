@@ -1,3 +1,4 @@
+import 'package:Libro/views/nav_user/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/utils/app_colors.dart';
@@ -39,7 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // Thêm logic quên mật khẩu
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPassword()),
+                      );
                     },
                     child: Text("Quên mật khẩu?", style: TextStyle(color: Colors.black)),
                   ),
