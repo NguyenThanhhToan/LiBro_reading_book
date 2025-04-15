@@ -6,8 +6,11 @@ import '../../services/api_constants.dart';
 
 class PreReadView extends StatefulWidget {
   final Book book;
+  final int? initialPage;
+  final int? fromBookmarkId;
+  final bool? inFavoriteList;
 
-  const PreReadView({Key? key, required this.book}) : super(key: key);
+  const PreReadView({Key? key, required this.book, this.initialPage,this.fromBookmarkId,this.inFavoriteList}) : super(key: key);
 
   @override
   _PreReadViewState createState() => _PreReadViewState();
@@ -182,12 +185,29 @@ class _PreReadViewState extends State<PreReadView> {
                   ),
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {},
-                  label: const Text("Thêm vào BST",style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold,),),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFA37200),
+                  onPressed: () {
+                    if (widget.inFavoriteList == true) {
+                      // Xử lý xoá khỏi BST
+                    } else {
+                      // Xử lý thêm vào BST
+                    }
+                  },
+                  icon: Icon(
+                    widget.inFavoriteList == true ? Icons.delete : Icons.bookmark_add,
+                    color: Colors.white,
                   ),
-                ),
+                  label: Text(
+                    widget.inFavoriteList == true ? "Xoá khỏi BST" : "Thêm vào BST",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFA37200),
+                  ),
+                )
               ],
             ),
           ],

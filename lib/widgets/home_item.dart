@@ -1,5 +1,6 @@
+import 'package:Libro/models/bookmark_model.dart';
 import 'package:flutter/material.dart';
-import '../models/book_model.dart';
+import '../views/read_book/pre_read_view.dart';
 class CategoryBox extends StatelessWidget {
   final String imagePath;
   final String label;
@@ -31,13 +32,26 @@ class CategoryBox extends StatelessWidget {
   }
 }
 class CurrentBook extends StatelessWidget {
-  final Book book;
+  final Bookmark bookmark;
 
-  const CurrentBook(this.book, {Key? key}) : super(key: key);
+  const CurrentBook(this.bookmark, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PreReadView(
+            book: bookmark.book,
+            initialPage: bookmark.pageNumber,
+            fromBookmarkId: bookmark.bookmarkId,
+          ),
+        ),
+      );
+    },
+    child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -55,7 +69,7 @@ class CurrentBook extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               image: DecorationImage(
-                image: AssetImage("assets/images/Doraemon1.jpg"),
+                image: NetworkImage(bookmark.book.imagePath),
                 fit: BoxFit.cover,
               ),
             ),
@@ -63,13 +77,14 @@ class CurrentBook extends StatelessWidget {
           const SizedBox(width: 10),
           Flexible(
             child: Text(
-              book.title,
+              bookmark.book.title,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
