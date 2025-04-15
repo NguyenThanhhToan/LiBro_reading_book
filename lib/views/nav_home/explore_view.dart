@@ -1,3 +1,4 @@
+import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/home_item.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   void _fetchData() {
     Future.microtask(() {
       Provider.of<BookViewModel>(context, listen: false).SuggestedBooks();
+      Provider.of<BookmarkViewModel>(context, listen: false).CurrentBook();
     });
   }
   final PageController _pageController = PageController();
@@ -27,7 +29,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     var bookViewModel = Provider.of<BookViewModel>(context);
-    
+    var bookmarkViewModel = Provider.of<BookmarkViewModel>(context);
+  
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
@@ -99,9 +102,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 childAspectRatio: 0.55,
                 crossAxisSpacing: 10,
               ),
-              itemCount: bookViewModel.suggestBooks.length,
+              itemCount: bookmarkViewModel.currentBook.length,
               itemBuilder: (context, index) {
-                return CurrentBook(bookViewModel.suggestBooks[index]);
+                return CurrentBook(bookmarkViewModel.currentBook[index]);
               },
             ),
           ),
