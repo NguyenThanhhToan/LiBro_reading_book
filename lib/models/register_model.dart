@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class RegisterModel {
   final String username;
   final String email;

@@ -162,18 +162,18 @@ class _PreReadViewState extends State<PreReadView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PDFScreen(path: file.path),
+                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,),
                         ),
                       );
                     } catch (e) {
                       print("PDF URL: $url");
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Không thể mở sách.aaaa Vui lòng thử lại.")),
+                        SnackBar(content: Text("Không thể mở sách. Vui lòng thử lại.")),
                       );
                     }
                   },
-                  label: const Text(
-                    "Đọc sách",
+                  label: Text(
+                    widget.initialPage != null ? "Đọc tiếp" : "Đọc sách",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

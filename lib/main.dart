@@ -5,6 +5,7 @@ import 'package:Libro/viewmodels/book_viewmodel.dart';
 import 'package:Libro/viewmodels/auth_viewmodel.dart';
 import 'package:Libro/viewmodels/category_viewmodel.dart';
 import 'package:Libro/views/auth/login_screen.dart';
+import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 
 void main() {
   runApp(
@@ -16,6 +17,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => BookViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewmodel()),
+        ChangeNotifierProvider(create: (_) => BookmarkViewModel()),
       ],
       child: const MyApp(),
     ),

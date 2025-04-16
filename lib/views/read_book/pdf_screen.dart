@@ -5,8 +5,9 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class PDFScreen extends StatefulWidget {
   final String? path;
+  final int? initialPage;
 
-  PDFScreen({Key? key, this.path}) : super(key: key);
+  PDFScreen({Key? key, this.path,this.initialPage,}) : super(key: key);
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -36,6 +37,7 @@ class _PDFScreenState extends State<PDFScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("📄 Building PDFView with initialPage = ${widget.initialPage}");
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -46,8 +48,8 @@ class _PDFScreenState extends State<PDFScreen> {
             autoSpacing: false,
             pageFling: true,
             pageSnap: true,
-            nightMode: true,
-            defaultPage: currentPage ?? 0,
+            nightMode: false,
+            defaultPage: widget.initialPage ?? 0,
             fitPolicy: FitPolicy.BOTH,
             preventLinkNavigation: false,
             backgroundColor: Colors.black,

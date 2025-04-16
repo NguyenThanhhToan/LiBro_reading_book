@@ -8,14 +8,18 @@ import 'latest_view.dart';
 import 'categories_view.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
+import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => BookViewModel(), // ✅ Cung cấp BookViewModel
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => BookViewModel()),
+        ChangeNotifierProvider(create: (context) => BookmarkViewModel()),
+      ],
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
