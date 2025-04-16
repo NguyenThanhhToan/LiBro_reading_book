@@ -90,6 +90,32 @@
       return [];
     }
   }
+
+    Future<List<Book>> fetchAllBooks() async {
+      try {
+        final response = await _dio.get(
+          "/book", // vì baseUrl đã là http://localhost:8080/api/v1
+          options: Options(headers: {
+            "Content-Type": "application/json",
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          if (response.data["status"] == 200) {
+            final List<dynamic> rawList = response.data["data"]["content"];
+            return Book.fromJsonList(rawList);
+          } else {
+            throw Exception("Lỗi từ server: ${response.data['message']}");
+          }
+        } else {
+          throw Exception("Lỗi HTTP: ${response.statusCode}");
+        }
+      } catch (e) {
+        print("🔥 Lỗi khi gọi API lấy tất cả sách: $e");
+        return [];
+      }
+    }
+
   Future<List<Book>> fetchBooksByCategories(List<String> categoryNames) async {
     try {
       String? token = await _storage.read(key: 'token');
@@ -180,4 +206,31 @@
       return [];
     }
   }
+    Future<List<Book>> fetchFavoriteBooks() async {
+      try {
+        String? token = await _storage.read(key: 'token');
+        if (token == null) throw Exception("Không tìm thấy token!");
+
+        final response = await _dio.get(
+          "/book/favorite",
+          options: Options(headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json",
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          if (response.data["status"] == 200) {
+            return Book.fromJsonList(response.data["data"]);
+          } else {
+            throw Exception("Lỗi từ server: ${response.data['message']}");
+          }
+        } else {
+          throw Exception("Lỗi HTTP: ${response.statusCode}");
+        }
+      } catch (e) {
+        print("🔥 Lỗi khi gọi API sách yêu thích: $e");
+        return [];
+      }
+    }
 }

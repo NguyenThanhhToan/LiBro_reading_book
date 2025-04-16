@@ -6,10 +6,11 @@ class BookViewModel extends ChangeNotifier {
   final BookService _bookService = BookService();
   List<Book> _suggestedBooks = [];
   List<Book> _lastedBooks = [];
-  List<Book> _featuredBooks =[];
+  List<Book> _featuredBooks = [];
   List<Book> _categoryBooks = [];
   List<Book> _authorBooks = [];
   List<Book> _tittleBooks = [];
+  List<Book> _favoriteBooks = []; // ✅ Thêm dòng này
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -20,6 +21,7 @@ class BookViewModel extends ChangeNotifier {
   List<Book> get categoryBooks => _categoryBooks;
   List<Book> get authorBooks => _authorBooks;
   List<Book> get tittleBooks => _tittleBooks;
+  List<Book> get favoriteBooks => _favoriteBooks; // ✅ Getter
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -71,6 +73,7 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
   Future<void> fetchBooksByCategories(List<String> categoryNames) async {
     _isLoading = true;
     _errorMessage = null;
@@ -90,6 +93,7 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
   Future<void> fetchBooksByAuthor(List<String> authorNames) async {
     _isLoading = true;
     _errorMessage = null;
@@ -109,6 +113,7 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
   Future<void> fetchBooksByTittle(List<String> title) async {
     _isLoading = true;
     _errorMessage = null;
@@ -123,6 +128,46 @@ class BookViewModel extends ChangeNotifier {
     } catch (e) {
       _tittleBooks = [];
       _errorMessage = "Lỗi khi tải sách: $e";
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchAllBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _lastedBooks = await _bookService.fetchAllBooks();
+      if (_lastedBooks.isEmpty) {
+        _errorMessage = "Không tìm thấy sách.";
+      }
+    } catch (e) {
+      _lastedBooks = [];
+      _errorMessage = "Lỗi khi tải sách: $e";
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  // ✅ Thêm hàm lấy sách yêu thích
+  Future<void> fetchFavoriteBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _favoriteBooks = await _bookService.fetchFavoriteBooks();
+
+      if (_favoriteBooks.isEmpty) {
+        _errorMessage = "Không có sách yêu thích nào.";
+      }
+    } catch (e) {
+      _favoriteBooks = [];
+      _errorMessage = "Lỗi khi tải sách yêu thích: $e";
     }
 
     _isLoading = false;
