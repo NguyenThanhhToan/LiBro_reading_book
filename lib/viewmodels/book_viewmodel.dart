@@ -1,3 +1,4 @@
+import 'package:Libro/app/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import '../models/book_model.dart';
 import '../services/book_service.dart';
@@ -177,5 +178,28 @@ class BookViewModel extends ChangeNotifier {
   bool isFavorite(Book book) {
   return _favoriteBooks.any((b) => b.bookId == book.bookId);
   }
-  
+
+  Future<void> toggleFavorite(BuildContext context, bool isInFavorite, int bookId) async {
+  try {
+    bool success = isInFavorite
+        ? await _bookService.removeBookFromFavorite(bookId)
+        : await _bookService.addBookToFavorite(bookId);
+
+    if (success) {
+      _errorMessage = "Thao tác thành công!";
+      notifyListeners(); 
+      AppSnackbar.showSuccess(context, _errorMessage!);
+
+    } else {
+      _errorMessage = "Lỗi khi thao tác với yêu thích.";
+      notifyListeners();
+      AppSnackbar.showSuccess(context, _errorMessage!);
+
+    }
+  } catch (e) {
+    _errorMessage = "Lỗi khi thao tác với yêu thích: $e";
+    notifyListeners();
+    AppSnackbar.showSuccess(context, _errorMessage!);
+  }
+}
 }

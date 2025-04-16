@@ -239,12 +239,11 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                   ),
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    if (inFavorite) {
-                      // Xử lý xoá khỏi BST
-                    } else {
-                      // Xử lý thêm vào BST
-                    }
+                  onPressed: () async {
+                    await context.read<BookViewModel>().toggleFavorite(context,inFavorite, widget.book.bookId);
+                    setState(() {
+                      inFavorite = !inFavorite;
+                    });
                   },
                   icon: Icon(
                     inFavorite == true ? Icons.delete : Icons.bookmark_add,

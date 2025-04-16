@@ -233,4 +233,65 @@
         return [];
       }
     }
+  Future<bool> addBookToFavorite(int bookId) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.post(
+        "${ApiConstants.baseUrl}/book/favorite/add/$bookId",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          print("✅ Thêm sách vào yêu thích thành công!");
+          return true;
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API: $e");
+      return false;
+    }
+  }
+
+  Future<bool> removeBookFromFavorite(int bookId) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.post(
+        "${ApiConstants.baseUrl}/book/favorite/remove/$bookId",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          print("✅ Thêm sách vào yêu thích thành công!");
+          return true;
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API: $e");
+      return false;
+    }
+  }
 }
