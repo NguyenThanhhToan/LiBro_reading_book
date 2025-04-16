@@ -173,4 +173,9 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  bool isFavorite(Book book) {
+  return _favoriteBooks.any((b) => b.bookId == book.bookId);
+  }
+  
 }

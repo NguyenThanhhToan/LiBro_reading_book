@@ -1,22 +1,76 @@
 import 'package:flutter/material.dart';
 import '../../models/book_model.dart';
+import 'package:provider/provider.dart';
 import '../../viewmodels/read_pdf_viewmodel.dart';
+import '../../viewmodels/book_viewmodel.dart';
 import 'pdf_screen.dart';
 import '../../services/api_constants.dart';
 
-class PreReadView extends StatefulWidget {
+class PreReadView extends StatelessWidget {
   final Book book;
   final int? initialPage;
   final int? fromBookmarkId;
-  final bool? inFavoriteList;
 
-  const PreReadView({Key? key, required this.book, this.initialPage,this.fromBookmarkId,this.inFavoriteList}) : super(key: key);
+  const PreReadView({
+    Key? key,
+    required this.book,
+    this.initialPage,
+    this.fromBookmarkId,
+  }) : super(key: key);
 
   @override
-  _PreReadViewState createState() => _PreReadViewState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<BookViewModel>(
+      create: (_) => BookViewModel()..fetchFavoriteBooks(),
+      child: _PreReadViewBody(
+        book: book,
+        initialPage: initialPage,
+        fromBookmarkId: fromBookmarkId,
+      ),
+    );
+  }
 }
 
-class _PreReadViewState extends State<PreReadView> {
+
+class _PreReadViewBody extends StatefulWidget {
+  final Book book;
+  final int? initialPage;
+  final int? fromBookmarkId;
+
+  const _PreReadViewBody({
+    Key? key,
+    required this.book,
+    this.initialPage,
+    this.fromBookmarkId,
+  }) : super(key: key);
+  @override
+  State<_PreReadViewBody> createState() => _PreReadViewBodyState();
+}
+
+class _PreReadViewBodyState extends State<_PreReadViewBody> {
+  bool inFavorite = false;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final favoriteVM = Provider.of<BookViewModel>(context, listen: false);
+
+      if (favoriteVM.favoriteBooks.isEmpty) {
+        await favoriteVM.fetchFavoriteBooks();
+      }
+
+      final isFavorited = favoriteVM.isFavorite(widget.book);
+
+      setState(() {
+        inFavorite = isFavorited;
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,18 +240,18 @@ class _PreReadViewState extends State<PreReadView> {
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    if (widget.inFavoriteList == true) {
+                    if (inFavorite) {
                       // Xử lý xoá khỏi BST
                     } else {
                       // Xử lý thêm vào BST
                     }
                   },
                   icon: Icon(
-                    widget.inFavoriteList == true ? Icons.delete : Icons.bookmark_add,
+                    inFavorite == true ? Icons.delete : Icons.bookmark_add,
                     color: Colors.white,
                   ),
                   label: Text(
-                    widget.inFavoriteList == true ? "Xoá khỏi BST" : "Thêm vào BST",
+                    inFavorite == true ? "Xoá khỏi BST" : "Thêm vào BST",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

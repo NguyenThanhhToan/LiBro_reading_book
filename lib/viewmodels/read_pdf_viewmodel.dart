@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+// save pdf to temp cache
 Future<File> createFileOfPdfUrl(String url) async {
   Completer<File> completer = Completer();
   try {
