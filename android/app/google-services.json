@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1011055951908",
+    "project_id": "libronotification",
+    "storage_bucket": "libronotification.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011055951908:android:e51dc2c0e094680ab358b1",
+        "android_client_info": {
+          "package_name": "com.example.libro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs2QLdSo6TtXq7AcWhm5liGC3l-uFTL04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
