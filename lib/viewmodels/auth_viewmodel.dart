@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:Libro/services/notification_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../models/register_model.dart';
@@ -204,6 +206,7 @@ class OtpViewModel extends ChangeNotifier {
 
 class LoginViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
+  final NotificationService _notificationService = NotificationService();
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -211,32 +214,41 @@ class LoginViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<bool> login(BuildContext context, String email, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+  _isLoading = true;
+  _errorMessage = null;
+  notifyListeners();
 
-    try {
-      var result = await _authService.login(email: email, password: password);
-      if (result) {
-        _isLoading = false;
-        notifyListeners();
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeView()),
-        );
-        return true;
-      } else {
-        _isLoading = false;
-        _errorMessage = "Đăng nhập thất bại. Vui lòng kiểm tra lại!";
-        notifyListeners();
-        return false;
-      }
-    } catch (e) {
+  try {
+    var result = await _authService.login(email: email, password: password);
+    if (result) {
       _isLoading = false;
-      _errorMessage = "Lỗi: ${e.toString()}";
+      notifyListeners();
+
+      // 🔥 Lấy token từ Firebase và gửi lên server
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        print("📲 FCM Token: $fcmToken");
+        await _notificationService.sendFcmTokenToServer(fcmToken);
+      }
+
+      // Chuyển màn hình
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeView()),
+      );
+      return true;
+    } else {
+      _isLoading = false;
+      _errorMessage = "Đăng nhập thất bại. Vui lòng kiểm tra lại!";
       notifyListeners();
       return false;
     }
+  } catch (e) {
+    _isLoading = false;
+    _errorMessage = "Lỗi: ${e.toString()}";
+    notifyListeners();
+    return false;
   }
+}
+
 }
