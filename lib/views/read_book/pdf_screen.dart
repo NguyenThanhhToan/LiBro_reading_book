@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class PDFScreen extends StatefulWidget {
   final String? path;
   final int? initialPage;
+  final int bookId;
 
-  PDFScreen({Key? key, this.path,this.initialPage,}) : super(key: key);
+  PDFScreen({Key? key, this.path,this.initialPage,required this.bookId}) : super(key: key);
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -20,19 +21,14 @@ class _PDFScreenState extends State<PDFScreen> {
   bool isReady = false;
   String errorMessage = '';
 
+  final BookmarkViewModel bookmarkViewModel = BookmarkViewModel();
+
   @override
   void dispose() {
-    super.dispose();
-    if (widget.path != null) {
-      final file = File(widget.path!);
-      if (file.existsSync()) {
-        file.delete().then((_) {
-          print("PDF file deleted: ${widget.path}");
-        }).catchError((e) {
-          print("Failed to delete PDF file: $e");
-        });
-      }
+    if (currentPage != null) {
+      bookmarkViewModel.addBookmark(currentPage!, widget.bookId);
     }
+    super.dispose();
   }
 
   @override

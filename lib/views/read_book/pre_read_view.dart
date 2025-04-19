@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../models/book_model.dart';
 import 'package:provider/provider.dart';
@@ -50,10 +52,15 @@ class _PreReadViewBody extends StatefulWidget {
 class _PreReadViewBodyState extends State<_PreReadViewBody> {
   bool inFavorite = false;
   bool isLoading = true;
+  late Future<File> _pdfFile;
 
   @override
   void initState() {
     super.initState();
+
+    // Tải PDF ngay khi vào trang
+    final url = "${ApiConstants.host}${widget.book.pdfFilePath}";
+    _pdfFile = createFileOfPdfUrl(url); // Tải và cache file
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final favoriteVM = Provider.of<BookViewModel>(context, listen: false);
@@ -209,18 +216,17 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                 ),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final url = "${ApiConstants.host}${widget.book.pdfFilePath}";
                     try {
-                      final file = await createFileOfPdfUrl(url);
+                      final file = await _pdfFile;
                       if (!mounted) return;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,),
+                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,bookId: widget.book.bookId,)
                         ),
                       );
                     } catch (e) {
-                      print("PDF URL: $url");
+                      print("PDF URL: ${widget.book.pdfFilePath}");
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Không thể mở sách. Vui lòng thử lại.")),
                       );

@@ -18,6 +18,9 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   flutter_pdfview: 1.4.0
   http: ^1.2.1
+  firebase_core: ^2.27.0
+  firebase_messaging: ^14.7.10
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:
