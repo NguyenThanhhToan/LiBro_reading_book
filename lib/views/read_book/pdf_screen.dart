@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class PDFScreen extends StatefulWidget {
   final String? path;
   final int? initialPage;
+  final int bookId;
 
-  PDFScreen({Key? key, this.path,this.initialPage,}) : super(key: key);
+  PDFScreen({Key? key, this.path,this.initialPage,required this.bookId}) : super(key: key);
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -18,6 +20,16 @@ class _PDFScreenState extends State<PDFScreen> {
   int? currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
+
+  final BookmarkViewModel bookmarkViewModel = BookmarkViewModel();
+
+  @override
+  void dispose() {
+    if (currentPage != null) {
+      bookmarkViewModel.addBookmark(currentPage!, widget.bookId);
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

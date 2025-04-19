@@ -222,7 +222,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,),
+                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,bookId: widget.book.bookId,)
                         ),
                       );
                     } catch (e) {

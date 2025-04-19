@@ -29,4 +29,25 @@ class BookmarkViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<bool> addBookmark(int page, int bookId) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      bool success = await _bookmarkService.fetchAddBookmark(page, bookId);
+      if (success) {
+        print("Bookmark đã được thêm thành công.");
+      } else {
+        _errorMessage = "Không thể thêm bookmark.";
+      }
+    } catch (e) {
+      _errorMessage = "Lỗi khi thêm bookmark: $e";
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return _errorMessage == null;
+  }
 }
