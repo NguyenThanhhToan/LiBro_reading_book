@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
@@ -19,21 +18,6 @@ class _PDFScreenState extends State<PDFScreen> {
   int? currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (widget.path != null) {
-      final file = File(widget.path!);
-      if (file.existsSync()) {
-        file.delete().then((_) {
-          print("PDF file deleted: ${widget.path}");
-        }).catchError((e) {
-          print("Failed to delete PDF file: $e");
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

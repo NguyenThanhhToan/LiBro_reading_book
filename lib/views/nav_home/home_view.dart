@@ -50,15 +50,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-void runHomeView() {
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeView(),
-    ),
-  );
-}
-
-void main() {
-  runHomeView();
-}
