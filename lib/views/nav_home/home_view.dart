@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../utils/app_colors.dart';
-import '../../components/custom_tabbar.dart';
-import '../../components/custom_navbar.dart';
-import 'explore_view.dart';
-import 'featured_view.dart';
-import 'latest_view.dart';
-import 'categories_view.dart';
+import 'package:Libro/utils/app_colors.dart';
+import 'package:Libro/components/custom_tabbar.dart';
+import 'package:Libro/components/custom_navbar.dart';
+import 'package:Libro/views/nav_home/explore_view.dart';
+import 'package:Libro/views/nav_home/featured_view.dart';
+import 'package:Libro/views/nav_home/latest_view.dart';
+import 'package:Libro/views/nav_home/categories_view.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
 import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
+
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

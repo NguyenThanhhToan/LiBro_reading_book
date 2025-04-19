@@ -1,4 +1,5 @@
-import 'book_model.dart';
+import 'package:Libro/models/book_model.dart';
+
 
 class Bookmark {
   final int bookmarkId;

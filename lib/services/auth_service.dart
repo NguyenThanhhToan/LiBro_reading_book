@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../models/register_model.dart';
-import 'api_constants.dart';
+import 'package:Libro/models/register_model.dart';
+import 'package:Libro/services/api_constants.dart';
+
 class AuthService {
   final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}/auth"));
   final FlutterSecureStorage _storage = FlutterSecureStorage();

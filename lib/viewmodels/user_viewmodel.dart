@@ -1,10 +1,10 @@
-import 'package:Libro/models/user_update_model.dart';
 import 'package:flutter/material.dart';
-import '../models/user_changepassword_model.dart';
-import '../models/user_model.dart';
-import '../services/user_service.dart';
-import '../views/auth/login_screen.dart';
-import '../views/nav_user/otp_forgot.dart';
+import 'package:Libro/models/user_update_model.dart';
+import 'package:Libro/models/user_changepassword_model.dart';
+import 'package:Libro/models/user_model.dart';
+import 'package:Libro/services/user_service.dart';
+import 'package:Libro/views/auth/login_screen.dart';
+import 'package:Libro/views/nav_user/otp_forgot.dart';
 
 class UserViewmodel extends ChangeNotifier {
   final UserService _service = UserService();

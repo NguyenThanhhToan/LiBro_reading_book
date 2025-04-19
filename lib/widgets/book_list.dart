@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/book_model.dart';
-import 'book_shelf_item.dart'; // Đảm bảo import đúng đường dẫn
+import 'package:Libro/models/book_model.dart';
+import 'package:Libro/widgets/book_shelf_item.dart';
 
 class BookListWidget extends StatelessWidget {
   final List<Book> books;

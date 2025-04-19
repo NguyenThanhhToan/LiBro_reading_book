@@ -1,7 +1,7 @@
-import 'package:Libro/app/app_snackbar.dart';
 import 'package:flutter/material.dart';
-import '../models/book_model.dart';
-import '../services/book_service.dart';
+import 'package:Libro/app/app_snackbar.dart';
+import 'package:Libro/models/book_model.dart';
+import 'package:Libro/services/book_service.dart';
 
 class BookViewModel extends ChangeNotifier {
   final BookService _bookService = BookService();

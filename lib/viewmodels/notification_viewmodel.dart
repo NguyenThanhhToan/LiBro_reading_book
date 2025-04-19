@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import '../services/notification_service.dart';
+import 'package:Libro/services/notification_service.dart';
 
 class NotificationViewModel extends ChangeNotifier {
   final NotificationService _notificationService = NotificationService();

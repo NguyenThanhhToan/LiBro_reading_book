@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../utils/app_colors.dart';
-import '../../components/custom_tabbar.dart';
-import '../../components/custom_navbar.dart';
-import '../../widgets/book_list.dart';
-import '../../viewmodels/book_viewmodel.dart';
+
+import 'package:Libro/utils/app_colors.dart';
+import 'package:Libro/components/custom_tabbar.dart';
+import 'package:Libro/components/custom_navbar.dart';
+import 'package:Libro/widgets/book_list.dart';
+import 'package:Libro/viewmodels/book_viewmodel.dart';
 
 class Bookshelf extends StatelessWidget {
   const Bookshelf({super.key});

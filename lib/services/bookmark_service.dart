@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../models/bookmark_model.dart';
-import 'api_constants.dart';
+import 'package:Libro/models/bookmark_model.dart';
+import 'package:Libro/services/api_constants.dart';
 
 class BookmarkService {
   final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));

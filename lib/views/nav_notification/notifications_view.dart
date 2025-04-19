@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../utils/app_colors.dart';
-import '../../components/custom_tabbar.dart';
-import '../../components/custom_navbar.dart';
+import 'package:Libro/utils/app_colors.dart';
+import 'package:Libro/components/custom_tabbar.dart';
+import 'package:Libro/components/custom_navbar.dart';
 
 class NotificationsView extends StatelessWidget {
   const NotificationsView({super.key});

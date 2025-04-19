@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'package:Libro/services/notification_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
-import '../models/register_model.dart';
-import '../services/auth_service.dart';
-import '../views/auth/login_screen.dart';
-import '../views/auth/otp_register.dart';
-import '../views/nav_home/home_view.dart';
-
+import 'package:Libro/services/notification_service.dart';
+import 'package:Libro/models/register_model.dart';
+import 'package:Libro/services/auth_service.dart';
+import 'package:Libro/views/auth/login_screen.dart';
+import 'package:Libro/views/auth/otp_register.dart';
+import 'package:Libro/views/nav_home/home_view.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();

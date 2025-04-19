@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/book_model.dart';
-import '../views/read_book/pre_read_view.dart';
+import 'package:Libro/models/book_model.dart';
+import 'package:Libro/views/read_book/pre_read_view.dart';
 import 'dart:math';
 
 class BookItem extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../../models/book_model.dart';
+import 'package:Libro/models/book_model.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/read_pdf_viewmodel.dart';
-import '../../viewmodels/book_viewmodel.dart';
-import 'pdf_screen.dart';
-import '../../services/api_constants.dart';
+import 'package:Libro/viewmodels/read_pdf_viewmodel.dart';
+import 'package:Libro/viewmodels/book_viewmodel.dart';
+import 'package:Libro/views/read_book/pdf_screen.dart';
+import 'package:Libro/services/api_constants.dart';
 
 class PreReadView extends StatelessWidget {
   final Book book;

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../utils/app_colors.dart';
-import '../../components/custom_navbar.dart';
-import 'change_info_view.dart';
-import 'change_password_view.dart';
-import '../../viewmodels/auth_viewmodel.dart';
-import '../../viewmodels/user_viewmodel.dart'; // nhớ import viewmodel này
+import 'package:Libro/utils/app_colors.dart';
+import 'package:Libro/components/custom_navbar.dart';
+import 'package:Libro/views/nav_user/change_info_view.dart';
+import 'package:Libro/views/nav_user/change_password_view.dart';
+import 'package:Libro/viewmodels/auth_viewmodel.dart';
+import 'package:Libro/viewmodels/user_viewmodel.dart';
+
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});

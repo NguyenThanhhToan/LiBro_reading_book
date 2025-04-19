@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/book_viewmodel.dart';
-import '../../widgets/book_item.dart';
-import '../../utils/app_colors.dart';
+
+import 'package:Libro/viewmodels/book_viewmodel.dart';
+import 'package:Libro/widgets/book_item.dart';
+import 'package:Libro/utils/app_colors.dart';
 
 class BooksByCategoryScreen extends StatefulWidget {
   final String categoryName;

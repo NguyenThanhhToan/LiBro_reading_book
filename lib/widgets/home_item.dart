@@ -1,6 +1,7 @@
 import 'package:Libro/models/bookmark_model.dart';
 import 'package:flutter/material.dart';
-import '../views/read_book/pre_read_view.dart';
+import 'package:Libro/views/read_book/pre_read_view.dart';
+
 class CategoryBox extends StatelessWidget {
   final String imagePath;
   final String label;

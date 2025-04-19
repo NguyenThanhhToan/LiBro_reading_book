@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../views/nav_home/home_view.dart';
-import '../views/nav_book/book_shelf_view.dart';
-import '../views/nav_notification/notifications_view.dart';
-import '../views/nav_search/search_view.dart';
-import '../views/nav_user/profile_view.dart';
+import 'package:Libro/views/nav_home/home_view.dart';
+import 'package:Libro/views/nav_book/book_shelf_view.dart';
+import 'package:Libro/views/nav_notification/notifications_view.dart';
+import 'package:Libro/views/nav_search/search_view.dart';
+import 'package:Libro/views/nav_user/profile_view.dart';
+
 class CustomNavBar extends StatelessWidget {
   final int currentIndex;
 

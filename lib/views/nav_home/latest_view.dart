@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/book_viewmodel.dart';
-import '../../widgets/book_item.dart';
+import 'package:Libro/viewmodels/book_viewmodel.dart';
+import 'package:Libro/widgets/book_item.dart';
 
 class LatestScreen extends StatefulWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/user_viewmodel.dart';
+import 'package:Libro/viewmodels/user_viewmodel.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});

@@ -1,6 +1,6 @@
-import 'package:Libro/models/bookmark_model.dart';
 import 'package:flutter/material.dart';
-import '../services/bookmark_service.dart';
+import 'package:Libro/models/bookmark_model.dart';
+import 'package:Libro/services/bookmark_service.dart';
 
 class BookmarkViewModel extends ChangeNotifier {
   final BookmarkService _bookmarkService = BookmarkService();
