@@ -38,14 +38,25 @@ class _LatestScreenState extends State<LatestScreen> {
             else
               SizedBox(
                 width: double.infinity,
-                child: Wrap(
-                  spacing: -4.5,
-                  runSpacing: 10,
-                  children: bookViewModel.lastedBooks
-                      .map((book) => BookItem(book)) // ✅ Hiển thị danh sách từ API
-                      .toList(),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    double itemWidth = 120.0;
+                    double spacing = 10.0;
+                    int count = (constraints.maxWidth / (itemWidth + spacing)).floor();
+                    double calculatedSpacing = (constraints.maxWidth - (itemWidth * count)) / (count - 1);
+                    return Wrap(
+                      spacing: calculatedSpacing,
+                      runSpacing: 10,
+                      children: bookViewModel.featuredBooks
+                          .map((book) => SizedBox(
+                                width: itemWidth,
+                                child: BookItem(book),
+                              ))
+                          .toList(),
+                    );
+                  },
                 ),
-              ),
+              )
           ],
         ),
       ),
