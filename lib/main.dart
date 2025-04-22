@@ -9,6 +9,7 @@ import 'package:Libro/viewmodels/auth_viewmodel.dart';
 import 'package:Libro/viewmodels/category_viewmodel.dart';
 import 'package:Libro/views/auth/login_screen.dart';
 import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
+import 'package:Libro/viewmodels/vip_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewmodel()),
         ChangeNotifierProvider(create: (_) => BookmarkViewModel()),
-        ChangeNotifierProvider(create: (_) => NotificationViewModel())
+        ChangeNotifierProvider(create: (_) => NotificationViewModel()),
+        ChangeNotifierProvider(create: (_) => VipViewModel())
       ],
       child: const MyApp(),
     ),

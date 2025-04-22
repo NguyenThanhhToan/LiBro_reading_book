@@ -6,6 +6,7 @@ import 'package:Libro/views/nav_user/change_info_view.dart';
 import 'package:Libro/views/nav_user/change_password_view.dart';
 import 'package:Libro/viewmodels/auth_viewmodel.dart';
 import 'package:Libro/viewmodels/user_viewmodel.dart';
+import 'package:Libro/views/nav_user//vip_subscription.dart';
 
 
 class ProfileView extends StatelessWidget {
@@ -68,7 +69,11 @@ class ProfileView extends StatelessWidget {
                   child: Column(
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => VipSubscription()),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
