@@ -39,14 +39,25 @@ class _FeaturedBooksScreenState extends State<FeaturedScreen> {
             else
               SizedBox(
                 width: double.infinity,
-                child: Wrap(
-                  spacing: -4.5,
-                  runSpacing: 10,
-                  children: bookViewModel.featuredBooks
-                      .map((book) => BookItem(book)) // ✅ Hiển thị danh sách từ API
-                      .toList(),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    double itemWidth = 120;
+                    double spacing = 10;
+                    int count = (constraints.maxWidth / (itemWidth + spacing)).floor();
+                    double calculatedSpacing = (constraints.maxWidth - (itemWidth * count)) / (count - 1);
+                    return Wrap(
+                      spacing: calculatedSpacing,
+                      runSpacing: 10,
+                      children: bookViewModel.featuredBooks
+                          .map((book) => SizedBox(
+                                width: itemWidth,
+                                child: BookItem(book),
+                              ))
+                          .toList(),
+                    );
+                  },
                 ),
-              ),
+              )
           ],
         ),
       ),

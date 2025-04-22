@@ -33,7 +33,6 @@ class _PDFScreenState extends State<PDFScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("📄 Building PDFView with initialPage = ${widget.initialPage}");
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -92,7 +91,7 @@ class _PDFScreenState extends State<PDFScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 200,
+              width: 180,
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
@@ -110,7 +109,7 @@ class _PDFScreenState extends State<PDFScreen> {
               ),
             ),
             SizedBox(
-              width: 200,
+              width: 180,
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
