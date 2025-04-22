@@ -26,7 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewmodel()),
         ChangeNotifierProvider(create: (_) => BookmarkViewModel()),
-        ChangeNotifierProvider(create: (_) => NotificationViewModel())
+        ChangeNotifierProvider(create: (_) => NotificationViewModel()),
       ],
       child: const MyApp(),
     ),

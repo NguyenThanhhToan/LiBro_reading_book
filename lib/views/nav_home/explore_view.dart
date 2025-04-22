@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:Libro/utils/app_timer_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,16 +11,21 @@ import 'package:Libro/widgets/book_item.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
-
+  
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
+  Timer? _bannerTimer;
   @override
   void initState() {
     super.initState();
     _fetchData();
+    _bannerTimer = startAutoScrollTimer(
+      controller: _pageController,
+      itemCount: 3,
+    );
   }
 
   void _fetchData() {
@@ -25,6 +33,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
       Provider.of<BookViewModel>(context, listen: false).SuggestedBooks();
       Provider.of<BookmarkViewModel>(context, listen: false).CurrentBook();
     });
+  }
+
+  @override
+  void dispose() { 
+    _bannerTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
   final PageController _pageController = PageController();
 
@@ -72,7 +87,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.blue, width: 0.5),
               ),                child: Wrap( 
-                spacing: 14, 
+                spacing: 13.4, 
                 runSpacing: 11,
                 children: [
                   CategoryBox(imagePath: 'assets/images/cate_box1.png', label: 'Sách'),
@@ -138,9 +153,4 @@ class _ExploreScreenState extends State<ExploreScreen> {
     ),
    );
   } 
-  @override
-  void dispose() { 
-    _pageController.dispose();
-    super.dispose();
-  }
 }
