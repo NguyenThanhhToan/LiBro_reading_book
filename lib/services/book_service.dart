@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Libro/models/book_model.dart';
 import 'package:Libro/services/api_constants.dart';
+import 'package:Libro/services/storage_service.dart';
 
+class BookService {
+  final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
+  final storageService = StorageService();
 
-  class BookService {
-    final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
-    final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
-    Future<List<Book>> fetchSuggestedBooks() async {
+  Future<List<Book>> fetchSuggestedBooks() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -38,7 +38,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<List<Book>> fetchLastedBooks() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -66,7 +66,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<List<Book>> fetchFeaturedBooks() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -95,7 +95,7 @@ import 'package:Libro/services/api_constants.dart';
     Future<List<Book>> fetchAllBooks() async {
       try {
         final response = await _dio.get(
-          "/book", // vì baseUrl đã là http://localhost:8080/api/v1
+          "/book",
           options: Options(headers: {
             "Content-Type": "application/json",
           }),
@@ -119,7 +119,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<List<Book>> fetchBooksByCategories(List<String> categoryNames) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -149,7 +149,7 @@ import 'package:Libro/services/api_constants.dart';
   }
   Future<List<Book>> fetchBooksByAuthor(List<String> authorNames) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -179,7 +179,7 @@ import 'package:Libro/services/api_constants.dart';
   }
   Future<List<Book>> fetchBookByTittle(List<String> title) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -209,7 +209,7 @@ import 'package:Libro/services/api_constants.dart';
   }
     Future<List<Book>> fetchFavoriteBooks() async {
       try {
-        String? token = await _storage.read(key: 'token');
+        String? token = await storageService.getToken();
         if (token == null) throw Exception("Không tìm thấy token!");
 
         final response = await _dio.get(
@@ -236,7 +236,7 @@ import 'package:Libro/services/api_constants.dart';
     }
   Future<bool> addBookToFavorite(int bookId) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.post(
@@ -267,7 +267,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<bool> removeBookFromFavorite(int bookId) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.post(
@@ -298,7 +298,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<List<Book>> fetchBooksTopView() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -329,7 +329,7 @@ import 'package:Libro/services/api_constants.dart';
 
   Future<List<Book>> fetchBooksTopLike() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(

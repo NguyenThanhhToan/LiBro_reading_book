@@ -5,15 +5,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Libro/models/http_response.dart';
 import 'package:Libro/models/user_model.dart';
 import 'package:Libro/services/api_constants.dart';
+import 'package:Libro/services/storage_service.dart';
 
 class UserService {
   final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final storageService = StorageService();
 
   // hàm get user Info
   Future<UserInfoModel> fetchUserInfo() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.get(
@@ -32,7 +33,7 @@ class UserService {
   // 🆕 Hàm cập nhật thông tin người dùng
   Future<void> updateUserInfo(UserUpdateModel user) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       await _dio.put(
@@ -54,7 +55,7 @@ class UserService {
 
   Future<HttpResponse> changePassword(UserChangepasswordModel user) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.patch(

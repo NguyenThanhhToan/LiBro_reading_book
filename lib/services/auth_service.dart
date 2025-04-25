@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Libro/models/register_model.dart';
 import 'package:Libro/services/api_constants.dart';
+import 'package:Libro/services/storage_service.dart';
 
 class AuthService {
-  final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}/auth"));
-  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}"));
+  final storageService = StorageService();
 
   Future<int?> register(RegisterModel registerModel) async {
     try {
       Response response = await _dio.post(
-        "/register",
+        "/auth/register",
         data: registerModel.toJson(),
       );
 
@@ -40,7 +40,7 @@ class AuthService {
   Future<bool> confirmOtp({required String userId, required String otpCode}) async {
     try {
       final response = await _dio.post(
-        "/confirm/$userId",
+        "/auth/confirm/$userId",
         data: {"otpCode": otpCode},
         options: Options(headers: {"Content-Type": "application/json"}),
       );
@@ -66,7 +66,7 @@ class AuthService {
   Future<bool> login({required String email, required String password}) async {
     try {
       final response = await _dio.post(
-        "/login",
+        "/auth/login",
         data: {"email": email, "password": password},
         options: Options(headers: {"Content-Type": "application/json"}),
       );
@@ -75,7 +75,7 @@ class AuthService {
 
       if (response.statusCode == 200 && response.data["status"] == 200) {
         String token = response.data["data"]["token"];
-        await _saveToken(token);
+        await storageService.saveToken(token);
         return true; // Đăng nhập thành công
       } else {
         return false; // Đăng nhập thất bại
@@ -88,11 +88,11 @@ class AuthService {
 
   Future<bool> logout() async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.post(
-        "/logout",
+        "/auth/logout",
         options: Options(headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ class AuthService {
       print("📩 Phản hồi đăng xuất: ${response.data}");
 
       if (response.statusCode == 200 && response.data["status"] == 200) {
-        await _storage.delete(key: 'token'); // Xóa token sau khi logout
+        await storageService.deleteToken();
         return true;
       } else {
         return false;
@@ -113,24 +113,51 @@ class AuthService {
     }
   }
 
-  // ✅ Lưu token vào Secure Storage
-  Future<bool> _saveToken(String token) async {
+  Future<bool> tryAutoLogin() async {
     try {
-      _storage.write(key: 'token', value: token);
-      return true;
-    } catch (e) {
-      print("⚠️ Lỗi lưu token: $e");
-      return false;
-    }
-  }
+      String? token = await storageService.getToken();
+      String? refreshToken = await storageService.getRefreshToken();
 
-  // ✅ Lấy token từ Secure Storage
-  Future<String?> getToken() async {
-    try {
-      return _storage.read(key: 'token');
+      if (token != null) {
+        try {
+          final response = await _dio.get(
+            "/user/me",
+            options: Options(headers: {"Authorization": "Bearer $token"}),
+          );
+
+          if (response.statusCode == 200) {
+            return true;
+          }
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 401 && refreshToken != null) {
+
+            final refreshResponse = await _dio.get(
+              "/auth/refresh",
+              options: Options(headers: {
+                "X-Refresh-Token": refreshToken,
+                "Content-Type": "application/json"
+              }),
+            );
+
+            if (refreshResponse.statusCode == 200) {
+              String newToken = refreshResponse.data["token"];
+              await storageService.saveToken(newToken);
+
+              final retryResponse = await _dio.get(
+                "/user/me",
+                options: Options(headers: {"Authorization": "Bearer $newToken"}),
+              );
+
+              return retryResponse.statusCode == 200;
+            }
+          }
+        }
+      }
+
+      return false;
     } catch (e) {
-      print("⚠️ Lỗi lấy token: $e");
-      return null;
+      print("⚠️ Lỗi auto-login: $e");
+      return false;
     }
   }
 

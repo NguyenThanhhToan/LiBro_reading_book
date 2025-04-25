@@ -22,6 +22,10 @@ class AuthViewModel extends ChangeNotifier {
   String errorMessage = '';
   Map<String, String?> errors = {};
 
+  bool _isLoggedIn = false;
+
+  bool get isLoggedIn => _isLoggedIn;
+
   void setLoading(bool value) {
     isLoading = value;
     notifyListeners();
@@ -119,6 +123,27 @@ class AuthViewModel extends ChangeNotifier {
       );
     } finally {
       setLoading(false);
+    }
+  }
+  Future<void> tryAutoLogin() async {
+    setLoading(true);
+    errorMessage = '';
+    _isLoggedIn = false;
+    notifyListeners();
+
+    try {
+      final success = await _authService.tryAutoLogin();
+      _isLoggedIn = success;
+
+      if (!success) {
+        errorMessage = "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.";
+      }
+    } catch (e) {
+      errorMessage = "Đăng nhập tự động thất bại: ${e.toString()}";
+      _isLoggedIn = false;
+    } finally {
+      setLoading(false);
+      notifyListeners();
     }
   }
 }

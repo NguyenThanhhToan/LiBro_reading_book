@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:Libro/services/api_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:Libro/services/storage_service.dart';
 
 class VipService {
   final Dio _dio = Dio(BaseOptions(
@@ -10,11 +11,11 @@ class VipService {
     connectTimeout: const Duration(seconds: 30),
   ));
 
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final storageService = StorageService();
 
   Future<bool> registerVip({required int time, required int amount}) async {
     try {
-      final token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.post(
