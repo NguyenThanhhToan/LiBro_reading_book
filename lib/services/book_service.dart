@@ -357,4 +357,35 @@ import 'package:Libro/services/api_constants.dart';
       return [];
     }
   }
+
+  Future<bool> fetchLikeBook(int bookId) async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.patch(
+        "${ApiConstants.baseUrl}/book/like/$bookId",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          print(" Like thành công ");
+          return true;
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API: $e");
+      return false;
+    }
+  }
 }
