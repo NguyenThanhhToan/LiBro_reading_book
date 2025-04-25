@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Libro/models/category_model.dart';
 import 'package:Libro/services/api_constants.dart';
 import 'package:Libro/services/storage_service.dart';
