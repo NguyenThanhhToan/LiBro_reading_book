@@ -1,3 +1,4 @@
+import 'package:Libro/app/app_snackbar.dart';
 import 'package:Libro/models/bookmark_model.dart';
 import 'package:flutter/material.dart';
 import 'package:Libro/views/read_book/pre_read_view.dart';
@@ -5,33 +6,57 @@ import 'package:Libro/views/read_book/pre_read_view.dart';
 class CategoryBox extends StatelessWidget {
   final String imagePath;
   final String label;
+  final Widget? pushToScreen;
 
   const CategoryBox({
     Key? key,
     required this.imagePath,
     required this.label,
+    this.pushToScreen,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(height: 3),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-      ],
+    return GestureDetector(
+      onTap: () {
+        if (pushToScreen != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => pushToScreen!),
+          );
+        } else {
+          AppSnackbar.showInfo(context, "Tính năng đang được phát triển");
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 3),
+          Container(
+            width: 60,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11.6,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
 class CurrentBook extends StatelessWidget {
   final Bookmark bookmark;
 

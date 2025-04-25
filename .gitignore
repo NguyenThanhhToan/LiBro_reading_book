@@ -42,5 +42,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# hiden
-/lib/services/api_constants.dart
+
+# .env file
+.env
+
+/android/app/google-services.json
+
+

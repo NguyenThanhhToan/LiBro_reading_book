@@ -7,7 +7,6 @@ class CategoryViewModel extends ChangeNotifier {
   List<Category> categories = [];
   bool isLoading = false;
 
-  // ✅ Hàm lấy danh mục
   Future<void> fetchCategories() async {
     print("🔍 fetchCategories() đã được gọi");
     isLoading = true;

@@ -295,4 +295,66 @@ import 'package:Libro/services/api_constants.dart';
       return false;
     }
   }
+
+  Future<List<Book>> fetchBooksTopView() async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "/book/search/top-viewed",
+        queryParameters: {
+          "limit": 10,
+        },
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API theo tác giả: $e");
+      return [];
+    }
+  }
+
+  Future<List<Book>> fetchBooksTopLike() async {
+    try {
+      String? token = await _storage.read(key: 'token');
+      if (token == null) throw Exception("Không tìm thấy token!");
+
+      final response = await _dio.get(
+        "/book/search/top-liked",
+        queryParameters: {
+          "limit": 100,
+        },
+        options: Options(headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data["status"] == 200) {
+          return Book.fromJsonList(response.data["data"]);
+        } else {
+          throw Exception("Lỗi từ server: ${response.data['message']}");
+        }
+      } else {
+        throw Exception("Lỗi HTTP: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🔥 Lỗi khi gọi API theo tác giả: $e");
+      return [];
+    }
+  }
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:Libro/utils/app_timer_banner.dart';
+import 'package:Libro/views/nav_home/top_like_view.dart';
+import 'package:Libro/views/nav_home/top_view_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -90,11 +92,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 spacing: 13.4, 
                 runSpacing: 11,
                 children: [
-                  CategoryBox(imagePath: 'assets/images/cate_box1.png', label: 'Sách'),
-                  CategoryBox(imagePath: 'assets/images/cate_box2.png', label: 'Truyện'),
-                  CategoryBox(imagePath: 'assets/images/cate_box3.png', label: 'Cộng đồng'),
+                  CategoryBox(imagePath: 'assets/images/cate_box1.png', label: 'Sách đang đọc'),
+                  CategoryBox(imagePath: 'assets/images/cate_box2.png', label: 'Sách nhiều lượt xem',pushToScreen: const BooksTopViewScreen(),),
+                  CategoryBox(imagePath: 'assets/images/cate_box3.jpg', label: 'Sách nhiều lượt thích',pushToScreen: const BooksTopLikeScreen(),),
                   CategoryBox(imagePath: 'assets/images/cate_box4.png', label: 'Song ngữ'),
-                  CategoryBox(imagePath: 'assets/images/cate_box5.png', label: 'Bộ sưu tập'),                    CategoryBox(imagePath: 'assets/images/cate_box6.png', label: 'Truyện ma'),
+                  CategoryBox(imagePath: 'assets/images/cate_box5.png', label: 'Bộ sưu tập Yêu thích'),
+                  CategoryBox(imagePath: 'assets/images/cate_box6.png', label: 'Truyện ma'),
                   CategoryBox(imagePath: 'assets/images/cate_box7.png', label: 'Xem thêm'),
                 ],
               ),

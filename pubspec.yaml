@@ -22,6 +22,7 @@ dependencies:
   firebase_messaging: ^14.7.10
   shared_preferences: ^2.0.13
   url_launcher: ^6.1.11
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
