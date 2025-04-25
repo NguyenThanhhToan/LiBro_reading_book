@@ -132,7 +132,7 @@ class AuthService {
           if (e.response?.statusCode == 401 && refreshToken != null) {
 
             final refreshResponse = await _dio.get(
-              "/refresh",
+              "/auth/refresh",
               options: Options(headers: {
                 "X-Refresh-Token": refreshToken,
                 "Content-Type": "application/json"

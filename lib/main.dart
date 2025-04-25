@@ -26,7 +26,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(
+          create: (context) => AuthViewModel()..tryAutoLogin(), // ✅ Khởi tạo và gọi autologin ngay lập tức
+        ),
         ChangeNotifierProvider(create: (_) => OtpViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => BookViewModel()),
@@ -41,7 +43,6 @@ void main() async {
   );
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -50,20 +51,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Libro App',
-      home: _getHomeView(context), // ✅ Trang chính
+      home: _getHomeView(context),
     );
   }
+
   Widget _getHomeView(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     if (authViewModel.isLoading) {
-      return Scaffold(body: Center(child: CircularProgressIndicator())); // Màn hình chờ nếu đang kiểm tra
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (authViewModel.errorMessage.isEmpty) {
-      return HomeView(); // Nếu đã đăng nhập thành công
-    } else {
-      return LoginScreen(); // Nếu chưa đăng nhập
-    }
+    // ✅ Kiểm tra cả isLoggedIn thay vì chỉ errorMessage
+    return authViewModel.isLoggedIn ? HomeView() : LoginScreen();
   }
 }
