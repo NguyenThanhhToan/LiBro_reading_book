@@ -44,7 +44,7 @@ app.*.map.json
 
 
 # .env file
-.env
+assets/.env
 
 /android/app/google-services.json
 

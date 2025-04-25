@@ -39,8 +39,8 @@ class BookmarkItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 book.imagePath,
-                width: 115,
-                height: 140,
+                width: 60,
+                height: 90,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
                     Icon(Icons.image_not_supported, size: 115, color: Colors.grey),

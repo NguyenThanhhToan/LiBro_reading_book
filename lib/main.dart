@@ -17,7 +17,7 @@ void main() async {
   await Firebase.initializeApp(); // 🔥 Khởi tạo Firebase ở đây
   await cleanOldPdfFiles();
   await printCachedBooks();
-  await dotenv.load();
+  await dotenv.load(fileName: "assets/.env");
 
   runApp(
     MultiProvider(
