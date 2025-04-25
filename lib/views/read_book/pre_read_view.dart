@@ -207,9 +207,14 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await context.read<BookViewModel>().fetchLikeBook(context, widget.book.bookId);
+                    setState(() {
+                      inFavorite = !inFavorite;
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(), // Bo tròn nếu muốn
+                    shape: const CircleBorder(),
                     padding: const EdgeInsets.all(12),
                   ),
                   child: const Icon(Icons.favorite, color: Colors.red),

@@ -246,4 +246,28 @@ class BookViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+  Future<void> fetchLikeBook(BuildContext context, int bookId) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final bool likeBook = await _bookService.fetchLikeBook(bookId);
+
+      if (likeBook) {
+        _errorMessage = "Thao tác thành công!";
+        AppSnackbar.showSuccess(context, _errorMessage!);
+      } else {
+        _errorMessage = "Lỗi khi thao tác với yêu thích.";
+        AppSnackbar.showError(context, _errorMessage!);
+      }
+
+    } catch (e) {
+      _errorMessage = "Lỗi khi thao tác với yêu thích: $e";
+      AppSnackbar.showError(context, _errorMessage!);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
