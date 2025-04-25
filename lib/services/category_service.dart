@@ -2,17 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Libro/models/category_model.dart';
 import 'package:Libro/services/api_constants.dart';
+import 'package:Libro/services/storage_service.dart';
 
 class CategoryService {
   final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final storageService = StorageService();
 
   Future<List<Category>> fetchGetCategories() async {
-    print("🟢 Đang gọi API: ${ApiConstants.baseUrl}/category");
 
     try {
-      String? token = await _storage.read(key: 'token');
-      print("🔑 Token: $token"); // In token để kiểm tra
+      String? token = await storageService.getToken();
 
       if (token == null) throw Exception("Không tìm thấy token!");
 
@@ -23,8 +22,6 @@ class CategoryService {
           "Content-Type": "application/json",
         }),
       );
-
-      print("📡 API Response: ${response.data}");
 
       if (response.statusCode == 200) {
         return Category.fromJsonList(response.data["data"]);
