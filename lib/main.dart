@@ -3,6 +3,7 @@ import 'package:Libro/viewmodels/read_pdf_viewmodel.dart';
 import 'package:Libro/viewmodels/user_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
 import 'package:Libro/viewmodels/auth_viewmodel.dart';
@@ -16,6 +17,7 @@ void main() async {
   await Firebase.initializeApp(); // 🔥 Khởi tạo Firebase ở đây
   await cleanOldPdfFiles();
   await printCachedBooks();
+  await dotenv.load();
 
   runApp(
     MultiProvider(
