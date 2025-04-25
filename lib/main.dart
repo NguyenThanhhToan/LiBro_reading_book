@@ -1,6 +1,7 @@
 import 'package:Libro/viewmodels/notification_viewmodel.dart';
 import 'package:Libro/viewmodels/read_pdf_viewmodel.dart';
 import 'package:Libro/viewmodels/user_viewmodel.dart';
+import 'package:Libro/views/nav_home/home_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,6 +19,9 @@ void main() async {
   await cleanOldPdfFiles();
   await printCachedBooks();
   await dotenv.load(fileName: "assets/.env");
+
+  final authViewModel = AuthViewModel();
+  await authViewModel.tryAutoLogin();
 
   runApp(
     MultiProvider(
@@ -46,7 +50,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Libro App',
-      home: LoginScreen(), // ✅ Trang chính
+      home: _getHomeView(context), // ✅ Trang chính
     );
+  }
+  Widget _getHomeView(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
+    if (authViewModel.isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator())); // Màn hình chờ nếu đang kiểm tra
+    }
+
+    if (authViewModel.errorMessage.isEmpty) {
+      return HomeView(); // Nếu đã đăng nhập thành công
+    } else {
+      return LoginScreen(); // Nếu chưa đăng nhập
+    }
   }
 }

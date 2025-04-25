@@ -121,6 +121,23 @@ class AuthViewModel extends ChangeNotifier {
       setLoading(false);
     }
   }
+  Future<void> tryAutoLogin() async {
+    setLoading(true);
+    errorMessage = "";
+    notifyListeners();
+
+    try {
+      bool _isLoggedIn = await _authService.tryAutoLogin();
+      if (!_isLoggedIn) {
+        errorMessage = "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.";
+      }
+    } catch (e) {
+      errorMessage = "Đăng nhập tự động thất bại";
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 }
 
 class OtpViewModel extends ChangeNotifier {
