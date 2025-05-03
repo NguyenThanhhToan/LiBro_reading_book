@@ -5,30 +5,35 @@ import 'package:Libro/views/read_book/pre_read_view.dart';
 class CategoryBox extends StatelessWidget {
   final String imagePath;
   final String label;
+  final VoidCallback? onTap;
 
   const CategoryBox({
     Key? key,
     required this.imagePath,
     required this.label,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          imagePath,
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(height: 3),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 3),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -12,19 +12,29 @@ class BookViewModel extends ChangeNotifier {
   List<Book> _authorBooks = [];
   List<Book> _tittleBooks = [];
   List<Book> _favoriteBooks = []; // ✅ Thêm dòng này
+  List<Book> topViewedBooks = [];
+  List<Book> topLikedBooks = [];
+
 
   bool _isLoading = false;
   String? _errorMessage;
 
   List<Book> get suggestBooks => _suggestedBooks;
+
   List<Book> get lastedBooks => _lastedBooks;
+
   List<Book> get featuredBooks => _featuredBooks;
+
   List<Book> get categoryBooks => _categoryBooks;
+
   List<Book> get authorBooks => _authorBooks;
+
   List<Book> get tittleBooks => _tittleBooks;
+
   List<Book> get favoriteBooks => _favoriteBooks; // ✅ Getter
 
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
 
   Future<void> SuggestedBooks() async {
@@ -176,30 +186,65 @@ class BookViewModel extends ChangeNotifier {
   }
 
   bool isFavorite(Book book) {
-  return _favoriteBooks.any((b) => b.bookId == book.bookId);
+    return _favoriteBooks.any((b) => b.bookId == book.bookId);
   }
+  //hàm goi top-view
+  Future<void> fetchTopViewedBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
 
-  Future<void> toggleFavorite(BuildContext context, bool isInFavorite, int bookId) async {
-  try {
-    bool success = isInFavorite
-        ? await _bookService.removeBookFromFavorite(bookId)
-        : await _bookService.addBookToFavorite(bookId);
+    try {
+      topViewedBooks = await _bookService.fetchTopViewedBooks();
+      if (topViewedBooks.isEmpty) {
+        _errorMessage = "Không có sách nhiều lượt xem.";
+      }
+    } catch (e) {
+      topViewedBooks = [];
+      _errorMessage = "Lỗi khi tải sách nhiều lượt xem: $e";
+    }
 
-    if (success) {
-      _errorMessage = "Thao tác thành công!";
-      notifyListeners(); 
-      AppSnackbar.showSuccess(context, _errorMessage!);
+    _isLoading = false;
+    notifyListeners();
+  }
+  Future<void> toggleFavorite(BuildContext context, bool isInFavorite,
+      int bookId) async {
+    try {
+      bool success = isInFavorite
+          ? await _bookService.removeBookFromFavorite(bookId)
+          : await _bookService.addBookToFavorite(bookId);
 
-    } else {
-      _errorMessage = "Lỗi khi thao tác với yêu thích.";
+      if (success) {
+        _errorMessage = "Thao tác thành công!";
+        notifyListeners();
+        AppSnackbar.showSuccess(context, _errorMessage!);
+      } else {
+        _errorMessage = "Lỗi khi thao tác với yêu thích.";
+        notifyListeners();
+        AppSnackbar.showSuccess(context, _errorMessage!);
+      }
+    } catch (e) {
+      _errorMessage = "Lỗi khi thao tác với yêu thích: $e";
       notifyListeners();
       AppSnackbar.showSuccess(context, _errorMessage!);
-
     }
-  } catch (e) {
-    _errorMessage = "Lỗi khi thao tác với yêu thích: $e";
-    notifyListeners();
-    AppSnackbar.showSuccess(context, _errorMessage!);
   }
-}
+  Future<void> fetchTopLikedBooks() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      topLikedBooks = await _bookService.fetchTopLikedBooks();
+      if (topLikedBooks.isEmpty) {
+        _errorMessage = "Không có sách nhiều lượt thích.";
+      }
+    } catch (e) {
+      topLikedBooks = [];
+      _errorMessage = "Lỗi khi tải sách nhiều lượt thích: $e";
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
 }

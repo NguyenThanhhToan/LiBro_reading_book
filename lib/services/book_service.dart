@@ -295,4 +295,46 @@ import 'package:Libro/services/api_constants.dart';
       return false;
     }
   }
-}
+    Future<List<Book>> fetchTopViewedBooks() async {
+      try {
+        final response = await _dio.get('${ApiConstants.baseUrl}/book/search/top-viewed');
+        print('Status code: ${response.statusCode}');
+        print('Raw response: ${response.data}');
+
+        if (response.statusCode == 200) {
+          if (response.data is Map<String, dynamic> && response.data['data'] is List) {
+            final List<dynamic> data = response.data['data'];
+            return data.map((json) => Book.fromJson(json)).toList();
+          } else {
+            throw Exception('Phản hồi API không đúng định dạng mong đợi.');
+          }
+        } else {
+          throw Exception('Lỗi server: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Lỗi khi gọi API Top-viewed: $e');
+        throw Exception('Không thể tải danh sách top-view');
+      }
+    }
+    Future<List<Book>> fetchTopLikedBooks() async {
+      try {
+        final response = await _dio.get('${ApiConstants.baseUrl}/book/search/top-liked');
+        print('Status code: ${response.statusCode}');
+        print('Raw response: ${response.data}');
+
+        if (response.statusCode == 200) {
+          if (response.data is Map<String, dynamic> && response.data['data'] is List) {
+            final List<dynamic> data = response.data['data'];
+            return data.map((json) => Book.fromJson(json)).toList();
+          } else {
+            throw Exception('Phản hồi API không đúng định dạng mong đợi.');
+          }
+        } else {
+          throw Exception('Lỗi server: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Lỗi khi gọi API Top-liked: $e');
+        throw Exception('Không thể tải danh sách sách nhiều lượt thích');
+      }
+    }
+  }

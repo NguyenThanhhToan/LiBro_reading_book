@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Libro/utils/app_timer_banner.dart';
+import 'package:Libro/views/nav_home/top_liked_books_creen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +9,7 @@ import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
 import 'package:Libro/widgets/home_item.dart';
 import 'package:Libro/widgets/book_item.dart';
+import 'package:Libro/views/nav_home/top_viewed_books_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -87,11 +89,30 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.blue, width: 0.5),
               ),                child: Wrap( 
-                spacing: 13.4, 
+                spacing: 13.4,
                 runSpacing: 11,
                 children: [
                   CategoryBox(imagePath: 'assets/images/cate_box1.png', label: 'Sách'),
-                  CategoryBox(imagePath: 'assets/images/cate_box2.png', label: 'Truyện'),
+                  CategoryBox(imagePath: 'assets/images/cate_box2.png',
+                    label: 'Top-view',
+                    onTap: () async {
+                      await Provider.of<BookViewModel>(context, listen: false).fetchTopViewedBooks();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TopViewedBooksScreen()),
+                      );
+                    },),
+                  CategoryBox(
+                    imagePath: 'assets/images/cate_box8.png',
+                    label: 'Top-like',
+                    onTap: () async {
+                      await Provider.of<BookViewModel>(context, listen: false).fetchTopLikedBooks();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TopLikedBooksScreen()), // Sửa tên màn hình ở đây
+                      );
+                    },
+                  ),
                   CategoryBox(imagePath: 'assets/images/cate_box3.png', label: 'Cộng đồng'),
                   CategoryBox(imagePath: 'assets/images/cate_box4.png', label: 'Song ngữ'),
                   CategoryBox(imagePath: 'assets/images/cate_box5.png', label: 'Bộ sưu tập'),                    CategoryBox(imagePath: 'assets/images/cate_box6.png', label: 'Truyện ma'),
