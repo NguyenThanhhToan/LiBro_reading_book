@@ -387,4 +387,31 @@ class BookService {
       return false;
     }
   }
+  Future<Book?> fetchBookById(int bookId) async {
+  try {
+    String? token = await _storage.read(key: 'token');
+    if (token == null) throw Exception("Không tìm thấy token!");
+
+    final response = await _dio.get(
+      "${ApiConstants.baseUrl}/book/$bookId",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final data = response.data;
+      return Book.fromJson(data['data']);
+    } else {
+      throw Exception("Lỗi HTTP: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("🔥 Lỗi khi gọi API fetchBookById: $e");
+    return null;
+  }
+}
+
 }

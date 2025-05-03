@@ -31,7 +31,7 @@ class BookItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PreReadView(book: book),
+            builder: (context) => PreReadView(bookId: book.bookId),
           ),
         );
       },

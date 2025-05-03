@@ -70,7 +70,7 @@ class CurrentBook extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) => PreReadView(
-            book: bookmark.book,
+            bookId: bookmark.book.bookId,
             initialPage: bookmark.pageNumber,
             fromBookmarkId: bookmark.bookmarkId,
           ),
