@@ -389,8 +389,8 @@ class BookService {
   }
   Future<Book?> fetchBookById(int bookId) async {
   try {
-    String? token = await _storage.read(key: 'token');
-    if (token == null) throw Exception("Không tìm thấy token!");
+    String? token = await storageService.getToken();
+      if (token == null) throw Exception("Không tìm thấy token!");
 
     final response = await _dio.get(
       "${ApiConstants.baseUrl}/book/$bookId",
