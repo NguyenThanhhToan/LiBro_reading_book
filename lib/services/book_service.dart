@@ -359,7 +359,7 @@ class BookService {
 
   Future<bool> fetchLikeBook(int bookId) async {
     try {
-      String? token = await _storage.read(key: 'token');
+      String? token = await storageService.getToken();
       if (token == null) throw Exception("Không tìm thấy token!");
 
       final response = await _dio.patch(
