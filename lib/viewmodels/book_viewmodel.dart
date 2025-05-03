@@ -14,6 +14,7 @@ class BookViewModel extends ChangeNotifier {
   List<Book> _favoriteBooks = [];
   List<Book> _topLikeBooks = [];
   List<Book> _topViewBooks = [];
+  Book? _selectedBook;
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -27,6 +28,7 @@ class BookViewModel extends ChangeNotifier {
   List<Book> get favoriteBooks => _favoriteBooks;
   List<Book> get topLikeBooks => _topLikeBooks;
   List<Book> get topViewBooks => _topViewBooks;
+  Book? get selectedBook => _selectedBook;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -270,4 +272,23 @@ class BookViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> fetchBookById(int bookId) async {
+  _isLoading = true;
+  _errorMessage = null;
+  notifyListeners();
+
+  try {
+    _selectedBook = await _bookService.fetchBookById(bookId);
+    if (_selectedBook == null) {
+      _errorMessage = "Không tìm thấy sách với ID: $bookId";
+    }
+  } catch (e) {
+    _errorMessage = "Lỗi khi lấy thông tin sách: $e";
+    _selectedBook = null;
+  }
+
+  _isLoading = false;
+  notifyListeners();
+}
 }

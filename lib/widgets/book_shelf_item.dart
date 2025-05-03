@@ -13,7 +13,7 @@ class BookShelfItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PreReadView(book: book)),
+          MaterialPageRoute(builder: (context) => PreReadView(bookId: book.bookId)),
         );
       },
       child: Container(

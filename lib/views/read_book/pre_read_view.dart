@@ -9,13 +9,13 @@ import 'package:Libro/views/read_book/pdf_screen.dart';
 import 'package:Libro/services/api_constants.dart';
 
 class PreReadView extends StatelessWidget {
-  final Book book;
+  final int bookId;
   final int? initialPage;
   final int? fromBookmarkId;
 
   const PreReadView({
     Key? key,
-    required this.book,
+    required this.bookId,
     this.initialPage,
     this.fromBookmarkId,
   }) : super(key: key);
@@ -23,9 +23,8 @@ class PreReadView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<BookViewModel>(
-      create: (_) => BookViewModel()..fetchFavoriteBooks(),
+      create: (_) => BookViewModel()..fetchBookById(bookId),
       child: _PreReadViewBody(
-        book: book,
         initialPage: initialPage,
         fromBookmarkId: fromBookmarkId,
       ),
@@ -33,18 +32,16 @@ class PreReadView extends StatelessWidget {
   }
 }
 
-
 class _PreReadViewBody extends StatefulWidget {
-  final Book book;
   final int? initialPage;
   final int? fromBookmarkId;
 
   const _PreReadViewBody({
     Key? key,
-    required this.book,
     this.initialPage,
     this.fromBookmarkId,
   }) : super(key: key);
+
   @override
   State<_PreReadViewBody> createState() => _PreReadViewBodyState();
 }
@@ -52,34 +49,46 @@ class _PreReadViewBody extends StatefulWidget {
 class _PreReadViewBodyState extends State<_PreReadViewBody> {
   bool inFavorite = false;
   bool isLoading = true;
-  late Future<File> _pdfFile;
+  Future<File>? _pdfFile;
 
   @override
   void initState() {
     super.initState();
 
-    // Tải PDF ngay khi vào trang
-    final url = "${ApiConstants.host}${widget.book.pdfFilePath}";
-    _pdfFile = createFileOfPdfUrl(url); // Tải và cache file
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final favoriteVM = Provider.of<BookViewModel>(context, listen: false);
+      final bookVM = Provider.of<BookViewModel>(context, listen: false);
 
-      if (favoriteVM.favoriteBooks.isEmpty) {
-        await favoriteVM.fetchFavoriteBooks();
+      // Chờ load xong book
+      while (bookVM.selectedBook == null && bookVM.isLoading) {
+        await Future.delayed(const Duration(milliseconds: 100));
       }
 
-      final isFavorited = favoriteVM.isFavorite(widget.book);
+      final book = bookVM.selectedBook;
 
-      setState(() {
-        inFavorite = isFavorited;
-        isLoading = false;
-      });
+      if (book != null) {
+        final url = "${ApiConstants.host}${book.pdfFilePath}";
+        _pdfFile = createFileOfPdfUrl(url);
+
+        if (bookVM.favoriteBooks.isEmpty) {
+          await bookVM.fetchFavoriteBooks();
+        }
+
+        setState(() {
+          inFavorite = bookVM.isFavorite(book);
+          isLoading = false;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final bookVM = Provider.of<BookViewModel>(context);
+    final book = bookVM.selectedBook;
+
+    if (book == null) {
+    return const Center(child: CircularProgressIndicator());
+  }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -96,7 +105,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network( 
-                      widget.book.imagePath,
+                      "${book!.imagePath}",
                       width: 140,
                       height: 230,
                       fit: BoxFit.cover,
@@ -109,7 +118,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.book.title,
+                          book.title,
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis, // Cắt chữ nếu quá dài
@@ -117,7 +126,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                         ),
                         const SizedBox(height: 35),
                         Text(
-                          'Tác giả: ${widget.book.authorName}',
+                          'Tác giả: ${book.authorName}',
                           style: const TextStyle(
                               fontSize: 16, fontStyle: FontStyle.italic),
                               overflow: TextOverflow.ellipsis, // Cắt chữ nếu quá dài
@@ -131,7 +140,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                               children: [
                                 Icon(Icons.visibility, color: Colors.black),
                                 const SizedBox(width: 5),
-                                Text('${widget.book.totalViews} lượt xem'),
+                                Text('${book.totalViews} lượt xem'),
                               ],
                             ),
                             const SizedBox(height: 15),
@@ -139,7 +148,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                               children: [
                                 Icon(Icons.favorite, color: Colors.black),
                                 const SizedBox(width: 5),
-                                Text('${widget.book.totalLikes} lượt thích'),
+                                Text('${book.totalLikes} lượt thích'),
                               ],
                             ),
                           ],
@@ -208,7 +217,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    await context.read<BookViewModel>().fetchLikeBook(context, widget.book.bookId);
+                    await context.read<BookViewModel>().fetchLikeBook(context, book.bookId);
                     setState(() {
                       inFavorite = !inFavorite;
                     });
@@ -227,11 +236,11 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PDFScreen(path: file.path, initialPage: widget.initialPage,bookId: widget.book.bookId,)
+                          builder: (context) => PDFScreen(path: file?.path, initialPage: widget.initialPage,bookId: book.bookId,)
                         ),
                       );
                     } catch (e) {
-                      print("PDF URL: ${widget.book.pdfFilePath}");
+                      print("PDF URL: ${book.pdfFilePath}");
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Không thể mở sách. Vui lòng thử lại.")),
                       );
@@ -251,7 +260,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                 ),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    await context.read<BookViewModel>().toggleFavorite(context,inFavorite, widget.book.bookId);
+                    await context.read<BookViewModel>().toggleFavorite(context,inFavorite, book.bookId);
                     setState(() {
                       inFavorite = !inFavorite;
                     });

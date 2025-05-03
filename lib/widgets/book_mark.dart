@@ -18,7 +18,7 @@ class BookmarkItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => PreReadView(
-              book: book,
+              bookId: book.bookId,
               // Có thể truyền page nếu PreReadView hỗ trợ
               // initialPage: page,
             ),
