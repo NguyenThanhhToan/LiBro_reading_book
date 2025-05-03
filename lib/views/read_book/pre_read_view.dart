@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:Libro/models/book_model.dart';
 import 'package:provider/provider.dart';
 import 'package:Libro/viewmodels/read_pdf_viewmodel.dart';
 import 'package:Libro/viewmodels/book_viewmodel.dart';
@@ -35,6 +34,7 @@ class PreReadView extends StatelessWidget {
 class _PreReadViewBody extends StatefulWidget {
   final int? initialPage;
   final int? fromBookmarkId;
+  
 
   const _PreReadViewBody({
     Key? key,
@@ -50,15 +50,16 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
   bool inFavorite = false;
   bool isLoading = true;
   Future<File>? _pdfFile;
+  int? _lastReadPage;
 
   @override
   void initState() {
     super.initState();
+    _lastReadPage = widget.initialPage;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final bookVM = Provider.of<BookViewModel>(context, listen: false);
 
-      // Chờ load xong book
       while (bookVM.selectedBook == null && bookVM.isLoading) {
         await Future.delayed(const Duration(milliseconds: 100));
       }
@@ -105,7 +106,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network( 
-                      "${book!.imagePath}",
+                      "${book.imagePath}",
                       width: 140,
                       height: 230,
                       fit: BoxFit.cover,
@@ -233,12 +234,21 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                     try {
                       final file = await _pdfFile;
                       if (!mounted) return;
-                      Navigator.push(
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PDFScreen(path: file?.path, initialPage: widget.initialPage,bookId: book.bookId,)
+                          builder: (context) => PDFScreen(
+                            path: file?.path,
+                            initialPage: _lastReadPage,
+                            bookId: book.bookId,
+                          ),
                         ),
                       );
+                      if (result != null && result is int) {
+                        setState(() {
+                          _lastReadPage = result;
+                        });
+                      }
                     } catch (e) {
                       print("PDF URL: ${book.pdfFilePath}");
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -247,7 +257,7 @@ class _PreReadViewBodyState extends State<_PreReadViewBody> {
                     }
                   },
                   label: Text(
-                    widget.initialPage != null ? "Đọc tiếp" : "Đọc sách",
+                     _lastReadPage != null ? "Đọc tiếp" : "Đọc sách",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
