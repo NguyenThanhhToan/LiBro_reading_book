@@ -9,8 +9,32 @@ import 'package:Libro/viewmodels/bookmark_viewmodel.dart';
 import 'package:Libro/widgets/book_shelf_item.dart';
 import 'package:Libro/widgets/book_mark.dart';
 
-class Bookshelf extends StatelessWidget {
-  const Bookshelf({Key? key}) : super(key: key);
+class BookShelfScreen extends StatefulWidget {
+  final int initialTabIndex;
+  const BookShelfScreen({super.key, this.initialTabIndex = 0});
+
+  @override
+  State<BookShelfScreen> createState() => _BookShelfScreenState();
+}
+
+class _BookShelfScreenState extends State<BookShelfScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    int safeIndex = (widget.initialTabIndex >= 0 && widget.initialTabIndex < 2)
+        ? widget.initialTabIndex
+        : 0;
+    _tabController = TabController(length: 2, vsync: this, initialIndex: safeIndex);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +49,22 @@ class Bookshelf extends StatelessWidget {
             ..fetchFavoriteBooks(),
         ),
       ],
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: Container(
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
             decoration: const BoxDecoration(
               gradient: AppColors.backgroundColor,
             ),
             child: Column(
               children: [
-                const SizedBox(height: 22),
-                const CustomTabBar(tabs: ['Sách gần đây', 'BST yêu thích']),
+                const SizedBox(height: 12),
+                CustomTabBar(
+                  tabs: const ['Sách gần đây', 'BST yêu thích'],
+                  controller: _tabController,
+                ),
                 Expanded(
                   child: TabBarView(
+                    controller: _tabController,
                     children: [
                       // Tab "Sách gần đây"
                       Consumer<BookmarkViewModel>(
@@ -50,6 +77,7 @@ class Bookshelf extends StatelessWidget {
                             return const Center(child: Text('Chưa có sách nào được đọc gần đây.'));
                           } else {
                             return ListView.builder(
+                              padding: const EdgeInsets.all(10),
                               itemCount: vm.currentBook.length,
                               itemBuilder: (_, i) {
                                 final bookmark = vm.currentBook[i];
@@ -70,8 +98,10 @@ class Bookshelf extends StatelessWidget {
                             return const Center(child: Text('Không có sách yêu thích nào.'));
                           } else {
                             return ListView.builder(
+                              padding: const EdgeInsets.all(10),
                               itemCount: vm.favoriteBooks.length,
-                              itemBuilder: (_, i) => BookShelfItem(book: vm.favoriteBooks[i]),
+                              itemBuilder: (_, i) =>
+                                  BookShelfItem(book: vm.favoriteBooks[i]),
                             );
                           }
                         },
@@ -82,8 +112,8 @@ class Bookshelf extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: const CustomNavBar(currentIndex: 1),
         ),
+        bottomNavigationBar: const CustomNavBar(currentIndex: 1),
       ),
     );
   }

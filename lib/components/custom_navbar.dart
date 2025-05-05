@@ -21,7 +21,7 @@ class CustomNavBar extends StatelessWidget {
         destination = const HomeView();
         break;
       case 1:
-        destination = const Bookshelf();
+        destination = const BookShelfScreen();
         break;
       case 2:
         destination = const SearchView();
