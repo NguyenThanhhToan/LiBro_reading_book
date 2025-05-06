@@ -20,14 +20,11 @@ void main() async {
   await printCachedBooks();
   await dotenv.load(fileName: "assets/.env");
 
-  final authViewModel = AuthViewModel();
-  await authViewModel.tryAutoLogin();
-
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => AuthViewModel()..tryAutoLogin(), // ✅ Khởi tạo và gọi autologin ngay lập tức
+          create: (context) => AuthViewModel()..tryAutoLogin(showError: false),
         ),
         ChangeNotifierProvider(create: (_) => OtpViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),

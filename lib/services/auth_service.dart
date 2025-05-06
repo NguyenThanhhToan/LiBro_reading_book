@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:Libro/models/register_model.dart';
 import 'package:Libro/services/api_constants.dart';
 import 'package:Libro/services/storage_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthService {
   final Dio _dio = Dio(BaseOptions(baseUrl: "${ApiConstants.baseUrl}"));
@@ -75,7 +76,9 @@ class AuthService {
 
       if (response.statusCode == 200 && response.data["status"] == 200) {
         String token = response.data["data"]["token"];
+        String refreshToken = response.data["data"]["refreshToken"];
         await storageService.saveToken(token);
+        await storageService.saveRefreshToken(refreshToken);
         return true; // Đăng nhập thành công
       } else {
         return false; // Đăng nhập thất bại

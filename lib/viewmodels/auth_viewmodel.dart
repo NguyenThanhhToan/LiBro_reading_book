@@ -125,9 +125,9 @@ class AuthViewModel extends ChangeNotifier {
       setLoading(false);
     }
   }
-  Future<void> tryAutoLogin() async {
+  Future<void> tryAutoLogin({bool showError = true}) async {
     setLoading(true);
-    errorMessage = '';
+    if (showError) errorMessage = '';
     _isLoggedIn = false;
     notifyListeners();
 
@@ -135,11 +135,13 @@ class AuthViewModel extends ChangeNotifier {
       final success = await _authService.tryAutoLogin();
       _isLoggedIn = success;
 
-      if (!success) {
+      if (!success && showError) {
         errorMessage = "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.";
       }
     } catch (e) {
-      errorMessage = "Đăng nhập tự động thất bại: ${e.toString()}";
+      if (showError) {
+        errorMessage = "Đăng nhập tự động thất bại: ${e.toString()}";
+      }
       _isLoggedIn = false;
     } finally {
       setLoading(false);
@@ -272,6 +274,5 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
     return false;
   }
-}
-
+  }
 }
